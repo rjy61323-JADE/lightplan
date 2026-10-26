@@ -1,0 +1,1392 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f3d2b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%231f3d2b'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23f6f1e8' font-family='sans-serif'%3E%E8%BD%BB%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%231f3d2b'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%23f6f1e8' font-family='sans-serif'%3E%E8%BD%BB%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="轻盈计划">
+<title>轻盈计划 · 减脂打卡台</title>
+<style>
+  :root{
+    --cream:#f6f1e8;
+    --paper:#fffdf8;
+    --ink:#1e3527;
+    --muted:#7b8579;
+    --line:rgba(30,53,39,.10);
+    --green:#1f3d2b;
+    --green-2:#2f5a3f;
+    --sage:#dfe8d7;
+    --coral:#e56b4a;
+    --gold:#c99a3e;
+    --radius:26px;
+    --shadow:0 18px 40px rgba(31,61,43,.08);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;min-height:100dvh;color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #fffaf0 0%, rgba(255,250,240,0) 60%),
+      linear-gradient(180deg,#f8f3ea 0%,#f1ece2 100%);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.5;
+    background-image:radial-gradient(rgba(31,61,43,.05) .7px, transparent .7px);
+    background-size:18px 18px;
+  }
+  button,input,textarea,select{font-family:inherit}
+  button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .app{max-width:540px;margin:0 auto;padding:18px 16px 120px;position:relative}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:6px 4px 14px;position:sticky;top:0;z-index:20;
+    background:linear-gradient(180deg,rgba(248,243,234,.96),rgba(248,243,234,.82) 70%,rgba(248,243,234,0));
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  }
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{
+    width:42px;height:42px;border-radius:15px;background:var(--green);color:#fff;
+    display:grid;place-items:center;font-weight:700;font-size:18px;
+    box-shadow:0 8px 18px rgba(31,61,43,.2)
+  }
+  h1{font-size:17px;margin:0;letter-spacing:.02em}
+  .brand p{margin:2px 0 0;font-size:11px;color:var(--muted)}
+  .streak{
+    font-size:12px;color:var(--green);background:rgba(223,232,215,.8);
+    padding:8px 11px;border-radius:999px;font-weight:600;white-space:nowrap
+  }
+  .date-row{display:flex;align-items:center;gap:8px;margin:4px 0 12px}
+  .date-nav{
+    width:38px;height:38px;border-radius:14px;border:1px solid var(--line);
+    background:rgba(255,255,255,.7);font-size:20px;color:var(--green);
+    display:grid;place-items:center
+  }
+  .date-input{
+    flex:1;min-width:0;border:1px solid var(--line);background:rgba(255,255,255,.75);
+    border-radius:14px;padding:10px 12px;font:inherit;font-weight:600;color:var(--ink);
+    text-align:center
+  }
+  .pill{
+    font-size:12px;background:var(--sage);color:var(--green);
+    padding:9px 12px;border-radius:999px;font-weight:600;white-space:nowrap
+  }
+  .hero{
+    position:relative;overflow:hidden;background:linear-gradient(135deg,#1f3d2b,#2e5a3f);
+    color:#f9f4ea;border-radius:30px;padding:22px;display:flex;justify-content:space-between;
+    gap:16px;box-shadow:0 20px 40px rgba(31,61,43,.22);margin-bottom:12px
+  }
+  .hero::after{
+    content:"";position:absolute;width:180px;height:180px;border-radius:50%;
+    background:rgba(255,255,255,.06);right:-50px;top:-80px
+  }
+  .hero-copy{position:relative;z-index:1;max-width:66%}
+  .eyebrow{font-size:10px;letter-spacing:.18em;color:#c9d9bf;font-weight:700}
+  .hero h2{font-size:23px;line-height:1.25;margin:8px 0;font-weight:650;letter-spacing:.01em}
+  .hero p{font-size:12px;line-height:1.6;color:rgba(249,244,234,.7);margin:0}
+  .ring{
+    --p:0;position:relative;width:82px;height:82px;border-radius:50%;
+    background:conic-gradient(var(--coral) calc(var(--p)*1%),rgba(255,255,255,.15) 0);
+    display:grid;place-items:center;flex:0 0 auto;align-self:center
+  }
+  .ring::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#254833}
+  .ring>div{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column}
+  .ring strong{font-size:20px;line-height:1;font-variant-numeric:tabular-nums}
+  .ring span{font-size:9px;color:rgba(255,255,255,.6);margin-top:3px}
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 12px}
+  .stat{
+    background:rgba(255,255,255,.72);border:1px solid var(--line);
+    border-radius:18px;padding:12px 8px;text-align:center
+  }
+  .stat span{display:block;font-size:10px;color:var(--muted);margin-bottom:4px}
+  .stat strong{font-size:17px;font-variant-numeric:tabular-nums}
+  .stat small{font-size:9px;color:var(--muted);margin-left:1px}
+  .card{
+    background:rgba(255,255,255,.78);border:1px solid var(--line);
+    border-radius:var(--radius);padding:18px;margin-bottom:12px;
+    box-shadow:var(--shadow);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
+  }
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .card h3{font-size:14px;margin:0;letter-spacing:.02em}
+  .tag{
+    font-size:10px;color:var(--green);background:var(--sage);border-radius:999px;
+    padding:5px 9px;font-weight:600;white-space:nowrap
+  }
+  .tag.coral{background:#f9e2da;color:#b84d33}
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label,.field-label{font-size:11px;color:var(--muted);font-weight:600}
+  .input-wrap{
+    display:flex;align-items:center;background:#fff;border:1px solid #e8e1d4;
+    border-radius:15px;padding:0 12px
+  }
+  .input-wrap input{
+    border:0;background:transparent;padding:12px 0;font:inherit;font-size:16px;
+    font-weight:600;width:100%;min-width:0;color:var(--ink);outline:none
+  }
+  .input-wrap span{font-size:11px;color:var(--muted)}
+  input[type=number]::-webkit-inner-spin-button{opacity:0}
+  textarea,select,input[type=text]{
+    width:100%;border:1px solid #e8e1d4;background:#fff;border-radius:15px;
+    padding:12px;font:inherit;font-size:14px;color:var(--ink);outline:none;resize:vertical
+  }
+  textarea{min-height:72px;line-height:1.6}
+  textarea:focus,select:focus,.input-wrap:focus-within{
+    border-color:rgba(31,61,43,.35);box-shadow:0 0 0 3px rgba(31,61,43,.06)
+  }
+  .slider-block{margin-top:14px}
+  .slider-top{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px
+  }
+  .slider-top output{font-size:14px;color:var(--green);font-weight:700}
+  input[type=range]{
+    width:100%;-webkit-appearance:none;height:6px;border-radius:999px;
+    background:linear-gradient(90deg,var(--sage),#f2ded6);outline:none
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+    background:var(--green);border:3px solid #fff;box-shadow:0 2px 8px rgba(31,61,43,.3)
+  }
+  .scale{display:flex;justify-content:space-between;font-size:9px;color:#a5aa9f;margin-top:4px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{
+    border:1px solid #e5ded1;background:#fbf8f2;color:var(--green);
+    border-radius:999px;padding:7px 10px;font-size:11px;font-weight:600
+  }
+  .chip:active{transform:scale(.97)}
+  .segmented{display:flex;background:#f0ebe1;border-radius:14px;padding:4px;gap:3px;margin-top:8px}
+  .segmented button{
+    flex:1;border:0;background:transparent;border-radius:11px;padding:8px 4px;
+    font:inherit;font-size:11px;font-weight:600;color:#7b8579
+  }
+  .segmented button.active{background:#fff;color:var(--green);box-shadow:0 3px 10px rgba(31,61,43,.1)}
+  .suggestion{
+    background:linear-gradient(135deg,#eef3e8,#f8f4ea);border:1px solid rgba(31,61,43,.08);
+    border-radius:18px;padding:14px;margin-top:12px
+  }
+  .suggestion-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .suggestion strong{display:block;font-size:15px;line-height:1.45}
+  .suggestion p{font-size:11px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+  .muted{color:var(--muted);font-size:10px}
+  .menu-line{
+    display:grid;grid-template-columns:44px 1fr;gap:10px;padding:10px 0;
+    border-top:1px dashed rgba(31,61,43,.1)
+  }
+  .menu-line:first-of-type{border-top:0;padding-top:0}
+  .menu-line>span{
+    font-size:10px;color:var(--coral);font-weight:700;background:#f9e6df;
+    border-radius:8px;padding:4px 6px;text-align:center;height:fit-content
+  }
+  .menu-line p{margin:0;font-size:12px;line-height:1.6}
+  .actions{display:grid;grid-template-columns:1fr 1.2fr;gap:10px;margin-top:14px}
+  .btn{
+    border:0;border-radius:16px;padding:14px 12px;font:inherit;font-size:13px;
+    font-weight:700;letter-spacing:.02em;display:flex;align-items:center;
+    justify-content:center;gap:6px
+  }
+  .btn.primary{background:var(--green);color:#fff;box-shadow:0 10px 20px rgba(31,61,43,.18)}
+  .btn.ghost{background:#fff;color:var(--green);border:1px solid #e2dbce}
+  .btn.share{width:100%;margin-top:10px;background:linear-gradient(135deg,#fff,#f2f7ed);color:var(--green);border:1px dashed rgba(31,61,43,.28)}
+  .btn:active{transform:scale(.985)}
+  .tab-panel{display:none;animation:fade .25s ease}
+  .tab-panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .bottom-nav{
+    position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));
+    transform:translateX(-50%);width:calc(100% - 24px);max-width:516px;
+    background:rgba(31,61,43,.96);border-radius:24px;padding:7px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:4px;z-index:50;
+    box-shadow:0 18px 40px rgba(31,61,43,.28);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+  }
+  .bottom-nav button{
+    border:0;background:transparent;color:rgba(255,255,255,.55);border-radius:18px;
+    padding:8px 4px;font:inherit;font-size:9px;font-weight:600;
+    display:flex;flex-direction:column;align-items:center;gap:4px;transition:.2s
+  }
+  .bottom-nav button.active{background:rgba(255,255,255,.12);color:#fff}
+  .bottom-nav svg{
+    width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round
+  }
+  .menu-card{
+    background:rgba(255,255,255,.78);border:1px solid var(--line);
+    border-radius:22px;padding:0 16px;margin-bottom:10px;
+    box-shadow:var(--shadow);overflow:hidden
+  }
+  .menu-card summary{list-style:none;display:flex;align-items:center;gap:10px;padding:15px 0;cursor:pointer}
+  .menu-card summary::-webkit-details-marker{display:none}
+  .date-badge{
+    background:var(--green);color:#fff;border-radius:10px;padding:6px 8px;
+    font-size:11px;font-weight:700;font-variant-numeric:tabular-nums
+  }
+  .menu-day{font-size:13px;font-weight:700;flex:1}
+  .chev{font-size:18px;color:var(--muted);transition:.2s}
+  details[open] .chev{transform:rotate(90deg)}
+  .menu-body{padding:0 0 14px}
+  .meal-row{
+    display:grid;grid-template-columns:44px 1fr;gap:10px;padding:9px 0;
+    border-top:1px dashed rgba(31,61,43,.1)
+  }
+  .meal-label{
+    font-size:9px;font-weight:700;color:var(--green);background:var(--sage);
+    border-radius:7px;padding:4px 5px;text-align:center;height:fit-content
+  }
+  .meal-row.avoid .meal-label{background:#f9e2da;color:#b84d33}
+  .meal-row p{margin:0;font-size:12px;line-height:1.6}
+  .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
+  .choice-grid button{
+    border:1px solid #e5ded1;background:#fff;border-radius:14px;padding:10px 6px;
+    font:inherit;font-size:11px;font-weight:600;color:var(--ink);line-height:1.35
+  }
+  .choice-grid button small{display:block;font-size:9px;color:var(--muted);font-weight:500;margin-top:2px}
+  .choice-grid button.active{background:var(--green);color:#fff;border-color:var(--green)}
+  .choice-grid button.active small{color:rgba(255,255,255,.7)}
+  .roll-stage{
+    position:relative;overflow:hidden;background:linear-gradient(135deg,#1f3d2b,#2e5a3f);
+    color:#fff;border-radius:22px;padding:22px 18px;text-align:center;margin-top:12px;
+    min-height:128px;display:flex;flex-direction:column;justify-content:center;gap:7px;
+    box-shadow:0 16px 30px rgba(31,61,43,.16)
+  }
+  .roll-stage::after{
+    content:"";position:absolute;width:170px;height:170px;border-radius:50%;
+    background:rgba(255,255,255,.06);right:-60px;top:-80px
+  }
+  .roll-kicker{font-size:10px;color:#c9d9bf;letter-spacing:.18em;font-weight:700;position:relative;z-index:1}
+  .roll-stage strong{font-size:18px;line-height:1.4;font-weight:650;position:relative;z-index:1}
+  .roll-stage span:last-child{font-size:11px;color:rgba(255,255,255,.65);line-height:1.5;position:relative;z-index:1}
+  .roll-stage.rolling strong{animation:rollPulse .1s ease infinite alternate}
+  @keyframes rollPulse{from{opacity:.55;transform:translateY(2px)}to{opacity:1;transform:none}}
+  .rotation-row{
+    display:flex;gap:10px;align-items:flex-start;padding:10px 0;
+    border-top:1px solid rgba(31,61,43,.07)
+  }
+  .rotation-row:first-child{border-top:0;padding-top:0}
+  .day-pill{
+    font-size:9px;font-weight:700;color:var(--green);background:var(--sage);
+    border-radius:8px;padding:5px 6px;min-width:34px;text-align:center
+  }
+  .rotation-row strong{display:block;font-size:12px;line-height:1.45}
+  .rotation-row small{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+  .review-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .review-stat{background:#f8f4ec;border:1px solid var(--line);border-radius:16px;padding:12px}
+  .review-stat span{display:block;font-size:10px;color:var(--muted)}
+  .review-stat strong{font-size:19px;font-variant-numeric:tabular-nums}
+  .review-stat small{font-size:9px;color:var(--muted)}
+  .chart{background:#fbf8f2;border-radius:18px;padding:12px;margin:10px 0;border:1px solid var(--line)}
+  .chart svg{width:100%;height:auto;display:block}
+  .chart-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:4px}
+  .history-row{
+    width:100%;border:0;border-top:1px solid rgba(31,61,43,.07);background:transparent;
+    padding:12px 0;display:flex;justify-content:space-between;align-items:center;
+    text-align:left;font:inherit
+  }
+  .history-row:first-child{border-top:0}
+  .history-row strong{font-size:12px;display:block}
+  .history-row span{font-size:10px;color:var(--muted)}
+  .history-row .right{text-align:right;font-variant-numeric:tabular-nums}
+  .empty{font-size:11px;color:var(--muted);line-height:1.6;padding:10px 0;margin:0}
+  .toast{
+    position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);
+    background:var(--green);color:#fff;padding:11px 16px;border-radius:999px;
+    font-size:12px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;
+    z-index:99;box-shadow:0 12px 30px rgba(31,61,43,.25);white-space:nowrap
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .note{font-size:10px;color:#9aa093;text-align:center;line-height:1.6;padding:8px 0 0}
+  @media(max-width:600px){
+    textarea,select,input[type=text]{font-size:16px}
+  }
+  @media(max-width:380px){
+    .stat-grid{grid-template-columns:repeat(2,1fr)}
+    .hero h2{font-size:20px}
+    .hero-copy{max-width:62%}
+  }
+  @media(min-width:700px){
+    .app{max-width:680px}
+    .hero h2{font-size:26px}
+  }
+  @media print{
+    body{background:#fff}
+    body::before{display:none}
+    .app{max-width:none;padding:0}
+    .topbar,.bottom-nav,.actions,.chips,.segmented,.date-nav,.toast,.note{display:none!important}
+    .tab-panel{display:none!important}
+    .tab-panel.active{display:block!important}
+    .card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+    .hero{box-shadow:none}
+    input,textarea,select{border:0;background:transparent;padding:0;min-height:auto;resize:none}
+    textarea{height:auto;overflow:visible}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">轻</div>
+      <div>
+        <h1>轻盈计划</h1>
+        <p>每天吃对 80% 就够了</p>
+      </div>
+    </div>
+    <div class="streak" id="streak">今天开始</div>
+  </header>
+
+  <main>
+    <section class="tab-panel active" id="tab-today">
+      <div class="date-row">
+        <button class="date-nav" id="prevDay" aria-label="前一天">‹</button>
+        <input class="date-input" type="date" id="dateInput">
+        <button class="date-nav" id="nextDay" aria-label="后一天">›</button>
+        <span class="pill" id="weekdayLabel">周一</span>
+      </div>
+
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">TODAY</span>
+          <h2 id="heroTitle">今天，先吃好早午餐</h2>
+          <p id="heroSub">不用完美，完成 3 件事就很好。</p>
+        </div>
+        <div class="ring" id="ring">
+          <div><strong id="progressNum">0%</strong><span>完成</span></div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat"><span>晨重</span><strong id="statWeight">—</strong><small>kg</small></div>
+        <div class="stat"><span>睡眠</span><strong id="statSleep">—</strong><small>h</small></div>
+        <div class="stat"><span>步数</span><strong id="statSteps">—</strong><small>步</small></div>
+        <div class="stat"><span>饱腹感</span><strong id="statFullness">3/5</strong></div>
+      </div>
+
+      <div class="card" id="todayMenuCard">
+        <div class="card-head"><h3>今日食堂</h3><span class="tag" id="todayMenuTag">照着拿</span></div>
+        <div class="menu-line"><span>早餐</span><p id="todayBreakfast">—</p></div>
+        <div class="menu-line"><span>午餐</span><p id="todayLunch">—</p></div>
+        <div class="menu-line"><span>少拿</span><p id="todayAvoid">—</p></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>晨间状态</h3><span class="tag">起床后</span></div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="weight">体重</label>
+            <div class="input-wrap"><input id="weight" type="number" inputmode="decimal" step="0.1" placeholder="68.2"><span>kg</span></div>
+          </div>
+          <div class="field">
+            <label for="sleep">睡眠</label>
+            <div class="input-wrap"><input id="sleep" type="number" inputmode="decimal" step="0.5" placeholder="7"><span>h</span></div>
+          </div>
+        </div>
+        <div class="slider-block">
+          <div class="slider-top"><span>晨起饥饿感</span><output id="hungerOut">3 / 5</output></div>
+          <input type="range" id="hunger" min="1" max="5" step="1" value="3">
+          <div class="scale"><span>不饿</span><span>刚好</span><span>很饿</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>早餐</h3><span class="tag">1–2 蛋 + 粗粮 + 菜</span></div>
+        <textarea id="breakfast" placeholder="例：2 个鸡蛋 + 半根玉米 + 南瓜 + 上海青 + 豆浆"></textarea>
+        <div class="chips" data-target="breakfast">
+          <button class="chip">鸡蛋</button>
+          <button class="chip">蒸玉米</button>
+          <button class="chip">南瓜</button>
+          <button class="chip">青菜</button>
+          <button class="chip">豆浆</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>午餐</h3><span class="tag">1 荤 + 2 素 + 半碗饭</span></div>
+        <textarea id="lunch" placeholder="例：蒸鱼 + 西红柿花菜 + 小白菜"></textarea>
+        <div class="chips" data-target="lunch">
+          <button class="chip">蒸鱼</button>
+          <button class="chip">两份青菜</button>
+          <button class="chip">豆腐</button>
+          <button class="chip">少油少汁</button>
+        </div>
+        <div class="field-grid" style="margin-top:10px">
+          <div class="field">
+            <label for="rice">米饭量</label>
+            <select id="rice">
+              <option>半碗</option>
+              <option>小半碗</option>
+              <option>一碗</option>
+              <option>没吃</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fullness">饱腹感</label>
+            <select id="fullness">
+              <option value="1">1 · 还很饿</option>
+              <option value="2">2 · 有点饿</option>
+              <option value="3" selected>3 · 刚好</option>
+              <option value="4">4 · 有点撑</option>
+              <option value="5">5 · 很撑</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>下午加餐</h3><span class="tag">只记有热量的</span></div>
+        <textarea id="snack" placeholder="例：无糖酸奶 / 一杯奶茶 / 无"></textarea>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>晚餐</h3><span class="tag coral" id="dinnerSceneTag">自煮</span></div>
+        <div class="segmented" id="dinnerScene">
+          <button data-value="自煮" class="active">自煮</button>
+          <button data-value="便利店">便利店</button>
+          <button data-value="餐馆">餐馆</button>
+        </div>
+        <textarea id="dinner" placeholder="例：番茄豆腐鸡蛋汤 + 半碗饭" style="margin-top:10px"></textarea>
+        <div class="suggestion" id="dinnerSuggestion"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>运动与状态</h3><span class="tag">睡前补</span></div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="steps">步数</label>
+            <div class="input-wrap"><input id="steps" type="number" inputmode="numeric" placeholder="7000"><span>步</span></div>
+          </div>
+          <div class="field">
+            <label for="exercise">运动</label>
+            <div class="input-wrap"><input id="exercise" type="text" placeholder="快走 30 分钟"></div>
+          </div>
+        </div>
+        <div class="field" style="margin-top:10px">
+          <label for="bowel">排便</label>
+          <select id="bowel">
+            <option>正常</option>
+            <option>偏少</option>
+            <option>腹泻</option>
+            <option>未排</option>
+          </select>
+        </div>
+        <div class="field" style="margin-top:10px">
+          <label for="note">备注</label>
+          <textarea id="note" placeholder="今天最难坚持的是什么？"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" id="saveBtn">保存今日</button>
+        <button class="btn primary" id="copyBtn">复制今日汇报</button>
+      </div>
+      <button class="btn share" id="shareBtn">分享完整数据给教练</button>
+      <p class="note">数据自动保存在本机。点“分享完整数据给教练”后：能选 Cherry Studio 就直接发；没有就选“存储到文件”，再回聊天用附件发送。</p>
+    </section>
+
+    <section class="tab-panel" id="tab-menu">
+      <div class="card">
+        <div class="card-head"><h3>本周食堂菜单</h3><span class="tag">10.26–10.30</span></div>
+        <p class="empty">早餐：1–2 蛋 + 1 蒸粗粮 + 1 蔬菜 + 豆浆。午餐：1 荤 + 2 素 + 半碗饭。汤只吃料不喝汤。</p>
+      </div>
+      <div id="menuList"></div>
+      <div class="card">
+        <div class="card-head"><h3>份量口诀</h3><span class="tag">用手量</span></div>
+        <div class="menu-line"><span>蛋白</span><p>1 掌心：鱼、鸡、瘦肉、豆腐，或 1–2 个蛋</p></div>
+        <div class="menu-line"><span>主食</span><p>1 拳头 ≈ 半碗饭；玉米半根、红薯 1 小个、土豆 1 小个都算 1 份</p></div>
+        <div class="menu-line"><span>蔬菜</span><p>2 拳头，越多越好</p></div>
+        <div class="menu-line"><span>豆浆</span><p>1 杯；甜就只喝半杯或换白水</p></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-dinner">
+      <div class="card">
+        <div class="card-head"><h3>今晚吃什么</h3><span class="tag coral">随机 Roll</span></div>
+        <p class="empty">不想选就交给运气。先选一个范围，再 Roll。</p>
+        <div class="segmented" id="rollFilter">
+          <button data-value="all" class="active">全部</button>
+          <button data-value="quick">10 分钟</button>
+          <button data-value="nocook">不用做</button>
+          <button data-value="restaurant">外食</button>
+        </div>
+        <div class="roll-stage" id="rollStage">
+          <span class="roll-kicker">今晚吃</span>
+          <strong id="rollResult">点下面按钮，Roll 一个</strong>
+          <span id="rollMeta">不用纠结，选到就吃</span>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="rollBtn">Roll 一下</button>
+          <button class="btn primary" id="rollAccept">就吃这个</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>30 秒选晚餐</h3><span class="tag">选择困难专用</span></div>
+        <p class="empty">只回答三个问题，不要比较“哪个最好”。</p>
+        <div class="field-label">1. 现在还有多少体力？</div>
+        <div class="choice-grid" data-group="energy">
+          <button data-value="low">0–3 分<small>只想躺</small></button>
+          <button data-value="mid">4–6 分<small>能动 10 分钟</small></button>
+          <button data-value="high">7 分以上<small>愿意等 20 分钟</small></button>
+        </div>
+        <div class="field-label" style="margin-top:14px">2. 今天在哪吃？</div>
+        <div class="choice-grid" data-group="place">
+          <button data-value="home">家<small>自煮</small></button>
+          <button data-value="store">便利店<small>超市也行</small></button>
+          <button data-value="restaurant">餐馆<small>外食</small></button>
+        </div>
+        <div class="field-label" style="margin-top:14px">3. 几点吃？</div>
+        <div class="choice-grid" data-group="time">
+          <button data-value="early">18:30 前<small>正常吃</small></button>
+          <button data-value="late">18:30 后<small>主食减半</small></button>
+          <button data-value="skip">还不想吃<small>先喝水</small></button>
+        </div>
+        <div class="suggestion" id="decisionResult">
+          <div class="suggestion-top"><span class="tag" id="decisionTag">默认</span><span class="muted">选不出就用它</span></div>
+          <strong id="decisionTitle">番茄豆腐鸡蛋汤 + 半碗饭/半根玉米</strong>
+          <p id="decisionBody">10 分钟，蛋白、蔬菜、主食都有。</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>一周晚餐轮换</h3><span class="tag">不用每天想</span></div>
+        <div id="rotationList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>餐馆点菜卡</h3><span class="tag coral">外食</span></div>
+        <div class="menu-line"><span>点菜</span><p>1 荤 + 2 素 + 1 主食；荤优先清蒸、白灼、炖、烤</p></div>
+        <div class="menu-line"><span>主食</span><p>半碗饭/半份面；菜里有土豆、粉条、年糕就不点主食</p></div>
+        <div class="menu-line"><span>吃法</span><p>先菜 → 蛋白 → 主食；每口放筷子；吃 20 分钟</p></div>
+        <div class="menu-line"><span>饮料</span><p>茶、水、无糖气泡水；不喝奶茶、果汁、啤酒</p></div>
+        <div class="menu-line"><span>停</span><p>7–8 分饱就打包一半，别等撑了才停</p></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-review">
+      <div class="card">
+        <div class="card-head"><h3>本周复盘</h3><span class="tag" id="weekRange">—</span></div>
+        <div class="review-grid">
+          <div class="review-stat"><span>周平均体重</span><strong id="avgWeight">—</strong><small>kg</small></div>
+          <div class="review-stat"><span>腰围</span><strong id="waistDisplay">—</strong><small>cm</small></div>
+          <div class="review-stat"><span>运动次数</span><strong id="exerciseCount">—</strong><small>次</small></div>
+          <div class="review-stat"><span>平均步数</span><strong id="avgSteps">—</strong><small>步</small></div>
+        </div>
+        <div class="chart" id="weightChart"></div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="waist">腰围（周日量）</label>
+            <div class="input-wrap"><input id="waist" type="number" inputmode="decimal" step="0.1" placeholder="75"><span>cm</span></div>
+          </div>
+          <div class="field">
+            <label for="reviewNext">下周只改一件事</label>
+            <input id="reviewNext" type="text" placeholder="晚餐主食减半">
+          </div>
+        </div>
+        <div class="field" style="margin-top:10px">
+          <label for="reviewHardest">最难坚持的场景</label>
+          <textarea id="reviewHardest" placeholder="例：加班后想点外卖"></textarea>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="exportBtn">导出 CSV</button>
+          <button class="btn primary" id="reviewSaveBtn">保存周复盘</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>最近 7 天</h3><span class="tag">点日期可回填</span></div>
+        <div id="historyList"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" id="printBtn">打印 / 存 PDF</button>
+        <button class="btn primary" id="copyBtn2">复制今日汇报</button>
+      </div>
+      <button class="btn share" id="shareDataBtn">分享全部数据给教练</button>
+    </section>
+  </main>
+</div>
+
+<nav class="bottom-nav" aria-label="主导航">
+  <button data-tab="today" class="active">
+    <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>
+    今日
+  </button>
+  <button data-tab="menu">
+    <svg viewBox="0 0 24 24"><path d="M4 11h16"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M9 7c0-1 1-2 3-2s3 1 3 2"/></svg>
+    菜单
+  </button>
+  <button data-tab="dinner">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg>
+    晚餐
+  </button>
+  <button data-tab="review">
+    <svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
+    复盘
+  </button>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const STORE_KEY = 'lightplan.v1';
+
+const MENU = {
+  '2026-10-26': {
+    breakfast: '鸡蛋 1–2 个 + 蒸玉米半根 + 蒸贝贝南瓜 1 小块 + 上海青 + 豆浆',
+    lunch: '豉汁蒸黄骨鱼 + 西红柿炒花菜木耳 + 炒小白菜 + 米饭半碗',
+    avoid: '炒细米粉、香芋地瓜丸、鲜肉包、馒头、冬瓜焖鸭、凉皮'
+  },
+  '2026-10-27': {
+    breakfast: '鸡蛋 1–2 个 + 蒸玉米半根 + 蒸鲜花生一小把 + 白菜苗 + 豆浆',
+    lunch: '白贝蒸鸡蛋 + 土豆胡萝卜焖鸡（去皮，土豆当主食）+ 炒上海青苗 + 米饭小半碗',
+    avoid: '干炒牛河、叉烧包、葱油花卷、炒萝卜干、梅菜扣肉、潮汕肉卷、猪杂粉'
+  },
+  '2026-10-28': {
+    breakfast: '鸡蛋 1–2 个 + 蒸土豆仔 1 小个 + 菜心 + 豆浆',
+    lunch: '鲜菇莴笋炒肉丝 + 豆豉鲮鱼焖南瓜（少量）+ 手撕包菜 + 米饭半碗',
+    avoid: '芝麻肠粉、酱香饼、糖包、奶香馒头、炸花生米、红烧狮子头、水煮肉片、鱼丸粉'
+  },
+  '2026-10-29': {
+    breakfast: '鸡蛋 1–2 个 + 蒸板栗红薯 1 小个 + 白菜苔 + 豆浆',
+    lunch: '姜葱焗鱼头（吃鱼肉，不蘸汁）+ 腐竹炒青菜 + 炒奶白菜 + 米饭半碗',
+    avoid: '炒陈村粉、红糖发糕、花卷、炒酸菜、冬瓜烧肉丸、梅菜蒸肉饼、酸辣土豆丝、伊面'
+  },
+  '2026-10-30': {
+    breakfast: '鸡蛋 1–2 个 + 蒸鲜毛豆一小把 + 生菜 + 豆浆；玉米可加半根',
+    lunch: '照烧鸡肉（去皮、少酱）+ 鲫鱼豆腐汤（吃鱼和豆腐）+ 炒春菜苗 + 米饭半碗',
+    avoid: '三丝炒面、千层饼、韭菜肉包、红糖馒头、啤酒鸭、生炒猪头肉、云吞'
+  }
+};
+
+const DINNER = {
+  1: { name: '周一', meal: '番茄豆腐鸡蛋汤 + 半碗饭', scene: '自煮', note: '10 分钟' },
+  2: { name: '周二', meal: '空气炸鸡腿去皮 + 西兰花 + 红薯', scene: '自煮', note: '20 分钟不用守' },
+  3: { name: '周三', meal: '速冻饺子 8 个 + 烫青菜', scene: '自煮', note: '不喝饺子汤' },
+  4: { name: '周四', meal: '金枪鱼沙拉 + 玉米', scene: '免煮', note: '酱汁一半' },
+  5: { name: '周五', meal: '关东煮 + 沙拉 + 无糖酸奶', scene: '便利店', note: '不选丸子' },
+  6: { name: '周六', meal: '餐馆：清蒸鱼/白灼虾 + 2 素 + 半碗饭', scene: '餐馆', note: '7–8 分饱' },
+  0: { name: '周日', meal: '冰箱清空：鸡蛋 + 豆腐 + 青菜 + 少量主食', scene: '自煮', note: '避免浪费' }
+};
+
+const ROLLS = [
+  { meal: '番茄豆腐鸡蛋汤 + 半碗饭', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '蛋白 + 蔬菜 + 主食，一锅出' },
+  { meal: '空气炸鸡腿去皮 + 西兰花 + 红薯', scene: '自煮', time: '20 分钟', tags: ['home'], tip: '腌好扔进去，不用守' },
+  { meal: '速冻饺子 8 个 + 一大盘烫青菜', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '不喝饺子汤' },
+  { meal: '金枪鱼沙拉 + 玉米', scene: '免煮', time: '5 分钟', tags: ['quick', 'nocook', 'home'], tip: '酱汁只放一半' },
+  { meal: '关东煮 + 沙拉 + 无糖酸奶', scene: '便利店', time: '5 分钟', tags: ['quick', 'nocook', 'store'], tip: '蛋/豆腐/萝卜/海带，不选丸子' },
+  { meal: '茶叶蛋 2 个 + 无糖酸奶 + 沙拉 + 半份饭团', scene: '便利店', time: '5 分钟', tags: ['quick', 'nocook', 'store'], tip: '便利店组合，别拿泡面' },
+  { meal: '餐馆：清蒸鱼/白灼虾 + 2 素 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], tip: '7–8 分饱打包一半' },
+  { meal: '餐馆：番茄牛肉面（面半份）+ 一份青菜', scene: '餐馆', time: '外食', tags: ['restaurant'], tip: '先吃青菜和牛肉，面留一半' },
+  { meal: '冰箱清空：鸡蛋 + 豆腐 + 青菜 + 少量主食', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '先把快坏的菜吃掉' },
+  { meal: '默认套餐：番茄豆腐鸡蛋汤 + 半根玉米', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '选不出就吃它' }
+];
+
+const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+const pad = (n) => String(n).padStart(2, '0');
+const dateKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseKey = (k) => {
+  const [y, m, d] = k.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+const addDays = (k, n) => {
+  const d = parseKey(k);
+  d.setDate(d.getDate() + n);
+  return dateKey(d);
+};
+const weekday = (k) => WEEKDAYS[parseKey(k).getDay()];
+const displayDate = (k) => {
+  const d = parseKey(k);
+  return `${d.getMonth() + 1}月${d.getDate()}日`;
+};
+const weekStart = (k) => {
+  const d = parseKey(k);
+  const day = (d.getDay() + 6) % 7;
+  return addDays(k, -day);
+};
+const weekEnd = (k) => addDays(weekStart(k), 6);
+
+function loadStore() {
+  try {
+    return JSON.parse(localStorage.getItem(STORE_KEY)) || { records: {}, reviews: {} };
+  } catch (e) {
+    return { records: {}, reviews: {} };
+  }
+}
+
+const saved = loadStore();
+const state = {
+  date: dateKey(new Date()),
+  records: saved.records || {},
+  reviews: saved.reviews || {},
+  scene: '自煮',
+  wizard: { energy: '', place: '', time: '' }
+};
+
+let lastRoll = null;
+let rollFilterValue = 'all';
+let rollTimer = null;
+
+function saveStore() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ records: state.records, reviews: state.reviews }));
+  } catch (e) {}
+}
+
+function defaultRecord() {
+  return {
+    weight: '', sleep: '', hunger: 3,
+    breakfast: '', lunch: '', rice: '半碗', fullness: 3,
+    snack: '', dinnerScene: '自煮', dinner: '',
+    steps: '', exercise: '', bowel: '正常', note: ''
+  };
+}
+
+function getRecord(k) {
+  return Object.assign(defaultRecord(), state.records[k] || {});
+}
+
+function collect() {
+  return {
+    weight: $('weight').value.trim(),
+    sleep: $('sleep').value.trim(),
+    hunger: Number($('hunger').value),
+    breakfast: $('breakfast').value.trim(),
+    lunch: $('lunch').value.trim(),
+    rice: $('rice').value,
+    fullness: Number($('fullness').value),
+    snack: $('snack').value.trim(),
+    dinnerScene: state.scene,
+    dinner: $('dinner').value.trim(),
+    steps: $('steps').value.trim(),
+    exercise: $('exercise').value.trim(),
+    bowel: $('bowel').value,
+    note: $('note').value.trim()
+  };
+}
+
+function fillForm(rec) {
+  $('weight').value = rec.weight || '';
+  $('sleep').value = rec.sleep || '';
+  $('hunger').value = rec.hunger || 3;
+  $('hungerOut').textContent = `${$('hunger').value} / 5`;
+  $('breakfast').value = rec.breakfast || '';
+  $('lunch').value = rec.lunch || '';
+  $('rice').value = rec.rice || '半碗';
+  $('fullness').value = String(rec.fullness || 3);
+  $('snack').value = rec.snack || '';
+  $('dinner').value = rec.dinner || '';
+  $('steps').value = rec.steps || '';
+  $('exercise').value = rec.exercise || '';
+  $('bowel').value = rec.bowel || '正常';
+  $('note').value = rec.note || '';
+  setScene(rec.dinnerScene || '自煮');
+}
+
+function setScene(scene) {
+  state.scene = scene;
+  $$('#dinnerScene button').forEach(b => b.classList.toggle('active', b.dataset.value === scene));
+  $('dinnerSceneTag').textContent = scene;
+}
+
+function calcProgress(rec) {
+  const fields = ['weight', 'sleep', 'breakfast', 'lunch', 'dinner', 'steps', 'exercise'];
+  const filled = fields.filter(k => String(rec[k] || '').trim() !== '').length;
+  return Math.round((filled / fields.length) * 100);
+}
+
+function renderSummary(rec = getRecord(state.date)) {
+  $('statWeight').textContent = rec.weight || '—';
+  $('statSleep').textContent = rec.sleep || '—';
+  $('statSteps').textContent = rec.steps || '—';
+  $('statFullness').textContent = `${rec.fullness || 3}/5`;
+  const p = calcProgress(rec);
+  $('progressNum').textContent = p + '%';
+  $('ring').style.setProperty('--p', p);
+  if (p === 0) {
+    $('heroTitle').textContent = '今天，先吃好早午餐';
+    $('heroSub').textContent = '不用完美，完成 3 件事就很好。';
+  } else if (p < 60) {
+    $('heroTitle').textContent = '慢慢来，先完成一半';
+    $('heroSub').textContent = '今天不用完美，吃对大部分就够了。';
+  } else if (p < 100) {
+    $('heroTitle').textContent = '今天做得很好';
+    $('heroSub').textContent = '再补上运动或晚餐，就完成今日打卡。';
+  } else {
+    $('heroTitle').textContent = '今日打卡完成';
+    $('heroSub').textContent = '复制汇报发我，明天继续。';
+  }
+  renderStreak();
+}
+
+function renderDateHeader() {
+  $('dateInput').value = state.date;
+  $('weekdayLabel').textContent = weekday(state.date);
+}
+
+function renderTodayMenu() {
+  const menu = MENU[state.date];
+  if (!menu) {
+    $('todayMenuTag').textContent = '通用公式';
+    $('todayBreakfast').textContent = '今天不在本周菜单内';
+    $('todayLunch').textContent = '1 掌蛋白 + 2 拳蔬菜 + 1 拳主食';
+    $('todayAvoid').textContent = '少油少汁，汤不喝';
+    return;
+  }
+  $('todayMenuTag').textContent = '照着拿';
+  $('todayBreakfast').textContent = menu.breakfast;
+  $('todayLunch').textContent = menu.lunch;
+  $('todayAvoid').textContent = menu.avoid;
+}
+
+function renderDinnerSuggestion() {
+  const plan = DINNER[parseKey(state.date).getDay()] || DINNER[1];
+  $('dinnerSuggestion').innerHTML =
+    `<div class="suggestion-top"><span class="tag">${plan.scene}</span><span class="muted">${plan.note}</span></div>` +
+    `<strong>${plan.meal}</strong>` +
+    `<p>不想做就点“晚餐”页，30 秒选一个。</p>`;
+}
+
+function renderStreak() {
+  let k = dateKey(new Date());
+  let n = 0;
+  while (state.records[k]) {
+    n += 1;
+    k = addDays(k, -1);
+  }
+  $('streak').textContent = n ? `连续 ${n} 天` : '今天开始';
+}
+
+let saveTimer = null;
+function queueSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveCurrent(false), 300);
+}
+
+function saveCurrent(showToast) {
+  const rec = collect();
+  const hasAny = ['weight', 'sleep', 'breakfast', 'lunch', 'snack', 'dinner', 'steps', 'exercise', 'note']
+    .some(k => String(rec[k] || '').trim() !== '');
+  if (hasAny) {
+    state.records[state.date] = rec;
+  } else {
+    delete state.records[state.date];
+  }
+  saveStore();
+  renderSummary(rec);
+  if (showToast) toast('已保存');
+}
+
+function loadDate(k) {
+  const active = document.querySelector('.tab-panel.active');
+  if (active && active.id === 'tab-review') saveReview(false);
+  saveCurrent(false);
+  state.date = k;
+  renderDateHeader();
+  fillForm(getRecord(k));
+  renderSummary();
+  renderTodayMenu();
+  renderDinnerSuggestion();
+  renderHistory();
+  renderReview();
+  renderStreak();
+}
+
+function renderMenu() {
+  $('menuList').innerHTML = Object.entries(MENU).map(([k, m], i) => `
+    <details class="menu-card" ${i === 0 ? 'open' : ''}>
+      <summary>
+        <span class="date-badge">${k.slice(5).replace('-', '.')}</span>
+        <span class="menu-day">${weekday(k)}</span>
+        <span class="chev">›</span>
+      </summary>
+      <div class="menu-body">
+        <div class="meal-row"><span class="meal-label">早餐</span><p>${m.breakfast}</p></div>
+        <div class="meal-row"><span class="meal-label">午餐</span><p>${m.lunch}</p></div>
+        <div class="meal-row avoid"><span class="meal-label">少拿</span><p>${m.avoid}</p></div>
+      </div>
+    </details>
+  `).join('');
+}
+
+function renderRotation() {
+  const order = [1, 2, 3, 4, 5, 6, 0];
+  $('rotationList').innerHTML = order.map(day => {
+    const p = DINNER[day];
+    return `<div class="rotation-row">
+      <span class="day-pill">${p.name}</span>
+      <div><strong>${p.meal}</strong><small>${p.scene} · ${p.note}</small></div>
+    </div>`;
+  }).join('');
+}
+
+function getRollPool() {
+  if (rollFilterValue === 'all') return ROLLS;
+  return ROLLS.filter(r => r.tags.includes(rollFilterValue));
+}
+
+function renderRoll(result) {
+  if (!result) {
+    $('rollResult').textContent = '点下面按钮，Roll 一个';
+    $('rollMeta').textContent = '不用纠结，选到就吃';
+    return;
+  }
+  $('rollResult').textContent = result.meal;
+  $('rollMeta').textContent = `${result.scene} · ${result.time} · ${result.tip}`;
+}
+
+function rollDinner() {
+  const pool = getRollPool();
+  if (!pool.length) {
+    toast('这个范围里没有选项');
+    return;
+  }
+  clearInterval(rollTimer);
+  $('rollStage').classList.add('rolling');
+  $('rollBtn').disabled = true;
+  $('rollAccept').disabled = true;
+  lastRoll = null;
+  let count = 0;
+  rollTimer = setInterval(() => {
+    const temp = pool[Math.floor(Math.random() * pool.length)];
+    $('rollResult').textContent = temp.meal;
+    $('rollMeta').textContent = `${temp.scene} · ${temp.time}`;
+    count += 1;
+    if (count >= 12) {
+      clearInterval(rollTimer);
+      lastRoll = pool[Math.floor(Math.random() * pool.length)];
+      renderRoll(lastRoll);
+      $('rollStage').classList.remove('rolling');
+      $('rollBtn').disabled = false;
+      $('rollAccept').disabled = false;
+    }
+  }, 70);
+}
+
+function acceptRoll() {
+  if (!lastRoll) {
+    toast('先 Roll 一下');
+    return;
+  }
+  $('dinner').value = lastRoll.meal;
+  setScene(lastRoll.scene === '免煮' ? '自煮' : lastRoll.scene);
+  queueSave();
+  switchTab('today');
+  toast('已填入今晚晚餐');
+}
+
+function renderDecision() {
+  const w = state.wizard;
+  const plan = DINNER[parseKey(state.date).getDay()] || DINNER[1];
+  let title = '番茄豆腐鸡蛋汤 + 半碗饭/半根玉米';
+  let body = '10 分钟，蛋白、蔬菜、主食都有。选不出就用它。';
+  let tag = '默认';
+
+  if (w.energy === 'low') {
+    title = '便利店/超市组合';
+    body = '关东煮：鸡蛋 + 豆腐 + 萝卜 + 海带 + 一份蔬菜 + 无糖酸奶。';
+    tag = '省力';
+  } else if (w.energy === 'mid') {
+    title = '10 分钟自煮';
+    body = `今天轮换：${plan.meal}。`;
+    tag = '自煮';
+  } else if (w.energy === 'high') {
+    title = '空气炸锅/一锅出';
+    body = `今天轮换：${plan.meal}。`;
+    tag = '不用守';
+  }
+
+  if (w.place === 'store') {
+    title = '便利店组合';
+    body = '茶叶蛋 2 个 + 无糖酸奶 + 沙拉 + 半份饭团。';
+    tag = '便利店';
+  } else if (w.place === 'restaurant') {
+    title = '餐馆点菜';
+    body = '1 荤 + 2 素 + 1 主食；半碗饭；7–8 分饱打包一半。';
+    tag = '外食';
+  } else if (w.place === 'home' && w.energy) {
+    if (w.energy === 'low') {
+      title = '回家：默认套餐';
+      body = '番茄豆腐鸡蛋汤 + 半碗饭/半根玉米。';
+      tag = '默认';
+    } else {
+      title = '回家做';
+      body = `今天轮换：${plan.meal}。`;
+      tag = '自煮';
+    }
+  }
+
+  if (w.time === 'late') {
+    body += ' 18:30 后：主食减半，蛋白和蔬菜为主。';
+  } else if (w.time === 'skip') {
+    body += ' 先喝一杯水，等 10 分钟再决定。';
+  }
+
+  $('decisionTag').textContent = tag;
+  $('decisionTitle').textContent = title;
+  $('decisionBody').textContent = body;
+}
+
+function renderChart() {
+  const entries = Object.entries(state.records)
+    .filter(([, v]) => parseFloat(v.weight))
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-14);
+
+  if (entries.length < 2) {
+    $('weightChart').innerHTML = '<div class="empty">记录 2 次体重后，这里会出现趋势线。</div>';
+    return;
+  }
+
+  const values = entries.map(([, v]) => parseFloat(v.weight));
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const W = 320, H = 100, P = 12;
+  const pts = values.map((v, i) => ({
+    x: P + (i * (W - P * 2) / (values.length - 1)),
+    y: H - P - ((v - min) / range) * (H - P * 2)
+  }));
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  const area = `${line} L${pts[pts.length - 1].x.toFixed(1)},${H} L${pts[0].x.toFixed(1)},${H} Z`;
+
+  $('weightChart').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H + 10}" role="img" aria-label="体重趋势">
+      <defs>
+        <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e56b4a" stop-opacity=".25"/>
+          <stop offset="1" stop-color="#e56b4a" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d="${area}" fill="url(#wg)"/>
+      <path d="${line}" fill="none" stroke="#e56b4a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${pts.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="#fff" stroke="#e56b4a" stroke-width="2"/>`).join('')}
+    </svg>
+    <div class="chart-labels"><span>${displayDate(entries[0][0])}</span><span>${displayDate(entries[entries.length - 1][0])}</span></div>
+  `;
+}
+
+function renderReview() {
+  const ws = weekStart(state.date);
+  const we = weekEnd(state.date);
+  $('weekRange').textContent = `${ws.slice(5).replace('-', '.')}–${we.slice(5).replace('-', '.')}`;
+
+  const recs = Object.entries(state.records)
+    .filter(([k]) => k >= ws && k <= we)
+    .map(([, v]) => v);
+
+  const weights = recs.map(r => parseFloat(r.weight)).filter(n => !isNaN(n));
+  const steps = recs.map(r => parseFloat(r.steps)).filter(n => !isNaN(n));
+  const exerciseDays = recs.filter(r => String(r.exercise || '').trim() !== '').length;
+
+  $('avgWeight').textContent = weights.length
+    ? (weights.reduce((a, b) => a + b, 0) / weights.length).toFixed(1)
+    : '—';
+  $('avgSteps').textContent = steps.length
+    ? Math.round(steps.reduce((a, b) => a + b, 0) / steps.length)
+    : '—';
+  $('exerciseCount').textContent = exerciseDays || '0';
+
+  const review = state.reviews[ws] || {};
+  $('waist').value = review.waist || '';
+  $('waistDisplay').textContent = review.waist || '—';
+  $('reviewHardest').value = review.hardest || '';
+  $('reviewNext').value = review.next || '';
+  renderChart();
+}
+
+function saveReview(showToast) {
+  const ws = weekStart(state.date);
+  state.reviews[ws] = {
+    waist: $('waist').value.trim(),
+    hardest: $('reviewHardest').value.trim(),
+    next: $('reviewNext').value.trim()
+  };
+  saveStore();
+  $('waistDisplay').textContent = state.reviews[ws].waist || '—';
+  if (showToast) toast('周复盘已保存');
+}
+
+function renderHistory() {
+  const days = [];
+  for (let i = 6; i >= 0; i -= 1) {
+    const k = addDays(state.date, -i);
+    if (state.records[k]) days.push(k);
+  }
+  if (!days.length) {
+    $('historyList').innerHTML = '<p class="empty">还没有记录。今天填一行，明天就能看到趋势。</p>';
+    return;
+  }
+  $('historyList').innerHTML = days.map(k => {
+    const r = state.records[k];
+    return `<button class="history-row" data-date="${k}">
+      <div><strong>${displayDate(k)} · ${weekday(k)}</strong><span>${r.breakfast || '早餐未记'}</span></div>
+      <div class="right"><strong>${r.weight ? r.weight + ' kg' : '—'}</strong><span>${r.steps ? r.steps + ' 步' : '—'}</span></div>
+    </button>`;
+  }).join('');
+}
+
+function switchTab(name) {
+  const active = document.querySelector('.tab-panel.active');
+  if (active && active.id === 'tab-review') saveReview(false);
+  saveCurrent(false);
+  $$('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${name}`));
+  $$('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  if (name === 'review') renderReview();
+  if (name === 'menu') renderMenu();
+  if (name === 'dinner') renderDecision();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildReport() {
+  const r = getRecord(state.date);
+  const menu = MENU[state.date];
+  const lines = [
+    `【减脂日报】${state.date} ${weekday(state.date)}`,
+    `晨重：${r.weight || '—'} kg｜睡眠：${r.sleep || '—'} h｜晨起饥饿：${r.hunger}/5`,
+    `早餐：${r.breakfast || '—'}`,
+    `午餐：${r.lunch || '—'}｜米饭：${r.rice || '—'}｜饱腹：${r.fullness}/5`,
+    `加餐/饮料：${r.snack || '无'}`,
+    `晚餐：${r.dinnerScene}｜${r.dinner || '—'}`,
+    `步数：${r.steps || '—'}｜运动：${r.exercise || '—'}`,
+    `排便：${r.bowel || '—'}｜备注：${r.note || '无'}`
+  ];
+  if (menu) lines.push(`今日食堂：早=${menu.breakfast}；午=${menu.lunch}`);
+  return lines.join('\n');
+}
+
+async function copyReport() {
+  const text = buildReport();
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      toast('已复制，粘贴到聊天里发我');
+      return;
+    }
+    throw new Error('clipboard unavailable');
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      toast('已复制，粘贴到聊天里发我');
+    } catch (err) {
+      window.prompt('复制这段发给教练：', text);
+    }
+    ta.remove();
+  }
+}
+
+function exportCSV() {
+  const keys = Object.keys(state.records).sort();
+  if (!keys.length) {
+    toast('还没有记录');
+    return;
+  }
+  const headers = ['日期', '星期', '晨重(kg)', '睡眠(h)', '晨起饥饿(1-5)', '早餐', '午餐', '米饭量', '饱腹感(1-5)', '加餐/饮料', '晚餐场景', '晚餐', '步数', '运动', '排便', '备注'];
+  const rows = keys.map(k => {
+    const r = getRecord(k);
+    return [k, weekday(k), r.weight, r.sleep, r.hunger, r.breakfast, r.lunch, r.rice, r.fullness, r.snack, r.dinnerScene, r.dinner, r.steps, r.exercise, r.bowel, r.note];
+  });
+  const csv = '\ufeff' + [headers, ...rows]
+    .map(row => row.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(','))
+    .join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `减脂打卡_${state.date}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('CSV 已导出');
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function escapeMd(value) {
+  return String(value ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ').trim();
+}
+
+function buildCoachMarkdown() {
+  const keys = Object.keys(state.records).sort();
+  const reviewKeys = Object.keys(state.reviews).sort();
+  const lines = [
+    '# 减脂打卡数据',
+    '',
+    `导出时间：${new Date().toLocaleString('zh-CN')}`,
+    `记录天数：${keys.length} 天`,
+    '',
+    '## 每日记录',
+    ''
+  ];
+  if (!keys.length) {
+    lines.push('暂无记录。');
+  } else {
+    lines.push('| 日期 | 星期 | 晨重kg | 睡眠h | 晨起饥饿 | 早餐 | 午餐 | 米饭 | 饱腹 | 加餐 | 晚餐场景 | 晚餐 | 步数 | 运动 | 排便 | 备注 |');
+    lines.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+    keys.forEach(k => {
+      const r = getRecord(k);
+      lines.push(`| ${k} | ${weekday(k)} | ${escapeMd(r.weight)} | ${escapeMd(r.sleep)} | ${escapeMd(r.hunger)} | ${escapeMd(r.breakfast)} | ${escapeMd(r.lunch)} | ${escapeMd(r.rice)} | ${escapeMd(r.fullness)} | ${escapeMd(r.snack)} | ${escapeMd(r.dinnerScene)} | ${escapeMd(r.dinner)} | ${escapeMd(r.steps)} | ${escapeMd(r.exercise)} | ${escapeMd(r.bowel)} | ${escapeMd(r.note)} |`);
+    });
+  }
+  lines.push('', '## 每周复盘', '');
+  if (!reviewKeys.length) {
+    lines.push('暂无复盘。');
+  } else {
+    lines.push('| 周起始 | 腰围cm | 最难坚持 | 下周只改一件事 |');
+    lines.push('|---|---|---|---|');
+    reviewKeys.forEach(k => {
+      const v = state.reviews[k] || {};
+      lines.push(`| ${k} | ${escapeMd(v.waist)} | ${escapeMd(v.hardest)} | ${escapeMd(v.next)} |`);
+    });
+  }
+  lines.push('', '## 原始数据（JSON）', '', '```json');
+  lines.push(JSON.stringify({ records: state.records, reviews: state.reviews }, null, 2));
+  lines.push('```');
+  return lines.join('\n');
+}
+
+async function shareToCoach() {
+  const active = document.querySelector('.tab-panel.active');
+  if (active && active.id === 'tab-review') saveReview(false);
+  saveCurrent(false);
+  const text = buildCoachMarkdown();
+  const filename = `减脂数据_${state.date}.txt`;
+  if (typeof File !== 'undefined' && navigator.canShare && navigator.share) {
+    try {
+      const file = new File([text], filename, { type: 'text/plain' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: '减脂打卡数据', text: '这是我的减脂打卡数据' });
+        toast('已打开分享');
+        return;
+      }
+    } catch (e) {
+      if (e && e.name === 'AbortError') return;
+    }
+  }
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('已生成数据文件，发到聊天里给我');
+}
+
+function bindEvents() {
+  $('prevDay').addEventListener('click', () => loadDate(addDays(state.date, -1)));
+  $('nextDay').addEventListener('click', () => loadDate(addDays(state.date, 1)));
+  $('dateInput').addEventListener('change', e => {
+    if (e.target.value) loadDate(e.target.value);
+  });
+
+  ['weight', 'sleep', 'breakfast', 'lunch', 'rice', 'fullness', 'snack', 'dinner', 'steps', 'exercise', 'bowel', 'note']
+    .forEach(id => $(id).addEventListener('input', () => {
+      if (id === 'fullness') renderSummary();
+      queueSave();
+    }));
+
+  $('hunger').addEventListener('input', () => {
+    $('hungerOut').textContent = `${$('hunger').value} / 5`;
+    queueSave();
+  });
+
+  $$('#dinnerScene button').forEach(btn => btn.addEventListener('click', () => {
+    setScene(btn.dataset.value);
+    queueSave();
+  }));
+
+  $$('.chips').forEach(box => box.addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    const target = $(box.dataset.target);
+    if (!target) return;
+    const text = btn.textContent.trim();
+    target.value = target.value ? `${target.value} + ${text}` : text;
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }));
+
+  $$('.choice-grid button').forEach(btn => btn.addEventListener('click', () => {
+    const group = btn.closest('.choice-grid').dataset.group;
+    state.wizard[group] = btn.dataset.value;
+    $$(`.choice-grid[data-group="${group}"] button`).forEach(b => b.classList.toggle('active', b === btn));
+    renderDecision();
+  }));
+
+  $$('#rollFilter button').forEach(btn => btn.addEventListener('click', () => {
+    rollFilterValue = btn.dataset.value;
+    $$('#rollFilter button').forEach(b => b.classList.toggle('active', b === btn));
+    lastRoll = null;
+    renderRoll(null);
+  }));
+  $('rollBtn').addEventListener('click', rollDinner);
+  $('rollAccept').addEventListener('click', acceptRoll);
+
+  $$('.bottom-nav button').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+  $('saveBtn').addEventListener('click', () => saveCurrent(true));
+  $('copyBtn').addEventListener('click', copyReport);
+  $('copyBtn2').addEventListener('click', copyReport);
+  $('shareBtn').addEventListener('click', shareToCoach);
+  $('shareDataBtn').addEventListener('click', shareToCoach);
+  $('reviewSaveBtn').addEventListener('click', () => saveReview(true));
+  $('exportBtn').addEventListener('click', exportCSV);
+  $('printBtn').addEventListener('click', () => window.print());
+
+  let reviewTimer = null;
+  ['waist', 'reviewHardest', 'reviewNext'].forEach(id => $(id).addEventListener('input', () => {
+    clearTimeout(reviewTimer);
+    reviewTimer = setTimeout(() => saveReview(false), 400);
+  }));
+
+  $('historyList').addEventListener('click', e => {
+    const row = e.target.closest('[data-date]');
+    if (!row) return;
+    loadDate(row.dataset.date);
+    switchTab('today');
+  });
+}
+
+function init() {
+  renderMenu();
+  renderRotation();
+  renderDateHeader();
+  fillForm(getRecord(state.date));
+  renderSummary();
+  renderTodayMenu();
+  renderDinnerSuggestion();
+  renderHistory();
+  renderReview();
+  renderStreak();
+  bindEvents();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
