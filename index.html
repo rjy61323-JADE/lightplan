@@ -264,6 +264,38 @@
   .roll-stage span:last-child{font-size:11px;color:rgba(255,255,255,.65);line-height:1.5;position:relative;z-index:1}
   .roll-stage.rolling strong{animation:rollPulse .1s ease infinite alternate}
   @keyframes rollPulse{from{opacity:.55;transform:translateY(2px)}to{opacity:1;transform:none}}
+  .slot-machine{
+    position:relative;overflow:hidden;background:linear-gradient(180deg,#1f3d2b,#163021);
+    border-radius:24px;padding:14px;margin-top:12px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 18px 30px rgba(31,61,43,.18)
+  }
+  .slot-machine::after{
+    content:"";position:absolute;width:190px;height:190px;border-radius:50%;
+    background:rgba(255,255,255,.05);right:-70px;top:-90px;pointer-events:none
+  }
+  .slot-labels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;position:relative;z-index:1}
+  .slot-labels span{font-size:9px;color:#c9d9bf;text-align:center;letter-spacing:.12em;font-weight:700}
+  .slot-reels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;position:relative;z-index:1}
+  .reel{
+    height:86px;border-radius:16px;border:2px solid #c99a3e;
+    background:linear-gradient(180deg,#fffdf8,#f3eee3);
+    display:grid;place-items:center;text-align:center;padding:8px;
+    position:relative;overflow:hidden;box-shadow:inset 0 -8px 16px rgba(31,61,43,.08)
+  }
+  .reel span{font-size:14px;font-weight:700;line-height:1.35;color:var(--ink);transition:.1s}
+  .reel.spinning span{filter:blur(1.2px);opacity:.7;animation:slotShake .08s linear infinite}
+  @keyframes slotShake{0%{transform:translateY(-2px)}50%{transform:translateY(2px)}100%{transform:translateY(-2px)}}
+  .reel.settle{animation:slotPop .26s ease}
+  @keyframes slotPop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+  .slot-line{
+    position:absolute;left:14px;right:14px;top:57%;height:2px;
+    background:linear-gradient(90deg,transparent,#c99a3e,transparent);
+    opacity:.55;pointer-events:none;z-index:2
+  }
+  .slot-result{text-align:center;padding:16px 8px 4px}
+  .slot-kicker{display:block;font-size:10px;color:var(--muted);letter-spacing:.16em;font-weight:700}
+  .slot-result strong{display:block;font-size:19px;line-height:1.4;margin:6px 0}
+  .slot-result span:last-child{font-size:11px;color:var(--muted);line-height:1.5}
   .rotation-row{
     display:flex;gap:10px;align-items:flex-start;padding:10px 0;
     border-top:1px solid rgba(31,61,43,.07)
@@ -505,24 +537,49 @@
 
     <section class="tab-panel" id="tab-dinner">
       <div class="card">
-        <div class="card-head"><h3>今晚吃什么</h3><span class="tag coral">随机 Roll</span></div>
-        <p class="empty">不想选就交给运气。先选一个范围，再 Roll。</p>
-        <div class="segmented" id="rollFilter">
+        <div class="card-head"><h3>晚餐老虎机</h3><span class="tag coral">随机 3 样</span></div>
+        <p class="empty">85 组沃尔玛常见食材搭配，抽 3 样，已经过筛。</p>
+        <div class="segmented" id="slotMode">
           <button data-value="all" class="active">全部</button>
-          <button data-value="quick">10 分钟</button>
-          <button data-value="nocook">不用做</button>
-          <button data-value="restaurant">外食</button>
+          <button data-value="western">西式简餐</button>
+          <button data-value="home">家常快手</button>
         </div>
-        <div class="roll-stage" id="rollStage">
-          <span class="roll-kicker">今晚吃</span>
-          <strong id="rollResult">点下面按钮，Roll 一个</strong>
-          <span id="rollMeta">不用纠结，选到就吃</span>
+        <div class="slot-machine" id="slotMachine">
+          <div class="slot-labels"><span>蛋白</span><span>蔬菜</span><span>主食</span></div>
+          <div class="slot-reels">
+            <div class="reel" id="reel0"><span>鸡蛋</span></div>
+            <div class="reel" id="reel1"><span>番茄</span></div>
+            <div class="reel" id="reel2"><span>半碗饭</span></div>
+          </div>
+          <div class="slot-line"></div>
+        </div>
+        <div class="slot-result" id="slotResult">
+          <span class="slot-kicker">今晚吃</span>
+          <strong id="slotDish">点“拉一下”开始</strong>
+          <span id="slotTip">三个转轮停下后，会给你一个完整搭配</span>
         </div>
         <div class="actions">
-          <button class="btn ghost" id="rollBtn">Roll 一下</button>
-          <button class="btn primary" id="rollAccept">就吃这个</button>
+          <button class="btn ghost" id="slotRollBtn">拉一下</button>
+          <button class="btn primary" id="slotAcceptBtn">就吃这个</button>
         </div>
       </div>
+
+      <details class="menu-card">
+        <summary>
+          <span class="date-badge">沃尔玛</span>
+          <span class="menu-day">一周囤货清单 · 冷藏 5 天+</span>
+          <span class="chev">›</span>
+        </summary>
+        <div class="menu-body">
+          <div class="meal-row"><span class="meal-label">蛋白</span><p>鸡蛋、冷冻鸡胸、冷冻虾仁、冷冻鱼排、冷冻牛肉片/瘦牛肉、真空嫩豆腐/老豆腐、无糖希腊酸奶、牛奶、水浸金枪鱼罐头</p></div>
+          <div class="meal-row"><span class="meal-label">蔬菜</span><p>大白菜、包菜、紫甘蓝、胡萝卜、白萝卜、土豆、红薯、南瓜、冬瓜、莲藕、西兰花、花菜、彩椒、西葫芦、黄瓜、番茄、鲜香菇、金针菇、杏鲍菇、洋葱、芹菜、丝瓜、豆角、茄子</p></div>
+          <div class="meal-row"><span class="meal-label">主食</span><p>大米、荞麦面、意面、燕麦、藜麦、全麦面包（冷冻）、墨西哥饼（冷冻）、玉米、速冻云吞/饺子</p></div>
+          <div class="meal-row"><span class="meal-label">冷冻</span><p>冷冻混合蔬菜、冷冻西兰花、冷冻玉米粒、冷冻菠菜（冷冻可以放很久）</p></div>
+          <div class="meal-row"><span class="meal-label">保存</span><p>鲜肉买回当天分装冷冻；豆腐买真空包装，开封后 2–3 天吃完；面包冷冻保存。</p></div>
+          <div class="meal-row"><span class="meal-label">说明</span><p>按沃尔玛常见货架品类整理，不绑定品牌；门店缺货就换同类。</p></div>
+          <div class="meal-row avoid"><span class="meal-label">别囤</span><p>新鲜菠菜、生菜、上海青、豆芽、韭菜——通常 3–5 天就蔫；想吃当天买。</p></div>
+        </div>
+      </details>
 
       <div class="card">
         <div class="card-head"><h3>30 秒选晚餐</h3><span class="tag">选择困难专用</span></div>
@@ -559,6 +616,9 @@
 
       <div class="card">
         <div class="card-head"><h3>餐馆点菜卡</h3><span class="tag coral">外食</span></div>
+        <div class="menu-line"><span>绿灯</span><p>潮汕白灼/清蒸、湘菜蒸鱼/蒸蛋、江西清蒸鱼/豆腐、东北炖鱼/白菜炖豆腐</p></div>
+        <div class="menu-line"><span>黄灯</span><p>潮汕牛肉炒芥蓝、木桶饭、凉拌菜、番茄炒蛋：少油、饭半份、菜过水</p></div>
+        <div class="menu-line"><span>红灯</span><p>干锅、红烧、油炸、腊味、锅包肉、杀猪菜、红油凉拌、木桶饭全份</p></div>
         <div class="menu-line"><span>点菜</span><p>1 荤 + 2 素 + 1 主食；荤优先清蒸、白灼、炖、烤</p></div>
         <div class="menu-line"><span>主食</span><p>半碗饭/半份面；菜里有土豆、粉条、年糕就不点主食</p></div>
         <div class="menu-line"><span>吃法</span><p>先菜 → 蛋白 → 主食；每口放筷子；吃 20 分钟</p></div>
@@ -666,27 +726,250 @@ const MENU = {
 };
 
 const DINNER = {
-  1: { name: '周一', meal: '番茄豆腐鸡蛋汤 + 半碗饭', scene: '自煮', note: '10 分钟' },
-  2: { name: '周二', meal: '空气炸鸡腿去皮 + 西兰花 + 红薯', scene: '自煮', note: '20 分钟不用守' },
-  3: { name: '周三', meal: '速冻饺子 8 个 + 烫青菜', scene: '自煮', note: '不喝饺子汤' },
-  4: { name: '周四', meal: '金枪鱼沙拉 + 玉米', scene: '免煮', note: '酱汁一半' },
-  5: { name: '周五', meal: '关东煮 + 沙拉 + 无糖酸奶', scene: '便利店', note: '不选丸子' },
-  6: { name: '周六', meal: '餐馆：清蒸鱼/白灼虾 + 2 素 + 半碗饭', scene: '餐馆', note: '7–8 分饱' },
-  0: { name: '周日', meal: '冰箱清空：鸡蛋 + 豆腐 + 青菜 + 少量主食', scene: '自煮', note: '避免浪费' }
+  1: { name: '周一', meal: '丝瓜炒蛋 + 清炒鲜香菇 + 半碗饭', scene: '自煮', note: '15 分钟' },
+  2: { name: '周二', meal: '冬瓜豆腐汤 + 清炒包菜 + 半碗饭', scene: '自煮', note: '15 分钟' },
+  3: { name: '周三', meal: '速冻云吞 + 丝瓜 + 鲜香菇（一锅煮）', scene: '自煮', note: '不喝汤' },
+  4: { name: '周四', meal: '番茄烧豆腐 + 清炒西兰花 + 半碗饭', scene: '自煮', note: '15 分钟' },
+  5: { name: '周五', meal: '南瓜蒸蛋 + 蒜蓉包菜 + 半碗饭', scene: '自煮', note: '南瓜算主食' },
+  6: { name: '周六', meal: '餐馆：潮汕小炒 1 荤 + 2 素 + 半碗饭', scene: '餐馆', note: '7–8 分饱' },
+  0: { name: '周日', meal: '冰箱清空：鸡蛋 + 豆腐 + 包菜/大白菜 + 少量主食', scene: '自煮', note: '避免浪费' }
 };
 
-const ROLLS = [
-  { meal: '番茄豆腐鸡蛋汤 + 半碗饭', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '蛋白 + 蔬菜 + 主食，一锅出' },
-  { meal: '空气炸鸡腿去皮 + 西兰花 + 红薯', scene: '自煮', time: '20 分钟', tags: ['home'], tip: '腌好扔进去，不用守' },
-  { meal: '速冻饺子 8 个 + 一大盘烫青菜', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '不喝饺子汤' },
-  { meal: '金枪鱼沙拉 + 玉米', scene: '免煮', time: '5 分钟', tags: ['quick', 'nocook', 'home'], tip: '酱汁只放一半' },
-  { meal: '关东煮 + 沙拉 + 无糖酸奶', scene: '便利店', time: '5 分钟', tags: ['quick', 'nocook', 'store'], tip: '蛋/豆腐/萝卜/海带，不选丸子' },
-  { meal: '茶叶蛋 2 个 + 无糖酸奶 + 沙拉 + 半份饭团', scene: '便利店', time: '5 分钟', tags: ['quick', 'nocook', 'store'], tip: '便利店组合，别拿泡面' },
-  { meal: '餐馆：清蒸鱼/白灼虾 + 2 素 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], tip: '7–8 分饱打包一半' },
-  { meal: '餐馆：番茄牛肉面（面半份）+ 一份青菜', scene: '餐馆', time: '外食', tags: ['restaurant'], tip: '先吃青菜和牛肉，面留一半' },
-  { meal: '冰箱清空：鸡蛋 + 豆腐 + 青菜 + 少量主食', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '先把快坏的菜吃掉' },
-  { meal: '默认套餐：番茄豆腐鸡蛋汤 + 半根玉米', scene: '自煮', time: '10 分钟', tags: ['quick', 'home'], tip: '选不出就吃它' }
+const HOME_PROTEINS = [
+  { name: '鸡蛋', kind: 'egg' },
+  { name: '嫩豆腐', kind: 'tofu' },
+  { name: '老豆腐', kind: 'tofu' },
+  { name: '速冻云吞', kind: 'dumpling' },
+  { name: '速冻饺子', kind: 'dumpling' }
 ];
+
+const STIR_VEGGIES = [
+  '丝瓜', '南瓜', '冬瓜', '鲜香菇', '上海青', '番茄', '西兰花', '娃娃菜',
+  '菠菜', '茄子', '豆角', '莲藕', '土豆', '芹菜', '胡萝卜', '白萝卜', '西葫芦'
+];
+const SOUP_VEGGIES = ['丝瓜', '冬瓜', '番茄', '白萝卜', '娃娃菜', '上海青', '菠菜', '鲜香菇'];
+const SIDE_VEGGIES = [
+  '上海青', '西兰花', '娃娃菜', '菠菜', '生菜', '黄瓜', '茄子', '豆角',
+  '莲藕', '土豆', '芹菜', '胡萝卜', '白萝卜', '西葫芦', '鲜香菇'
+];
+const DUMPLING_VEGGIES = ['丝瓜', '冬瓜', '番茄', '上海青', '菠菜', '娃娃菜', '生菜', '鲜香菇', '西葫芦'];
+
+const CARBS = ['半碗饭', '半根玉米', '1 个小红薯', '一小碗南瓜'];
+const STARCHY = ['南瓜', '土豆', '莲藕', '玉米'];
+
+const RESTAURANT_ROLLS = [
+  { meal: '潮汕：白灼虾/清蒸鱼 + 2 素 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '优先白灼/清蒸，蘸料少放' },
+  { meal: '潮汕：牛肉炒芥蓝（少油）+ 冬瓜汤 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '黄灯', tip: '让厨房少油，汤只吃料' },
+  { meal: '湘菜：蒸鱼/白灼鸡 + 蒜蓉青菜 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '菜过水，别点小炒肉/腊味' },
+  { meal: '湘菜：蒸蛋 + 清炒青菜 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '少油，米饭半碗' },
+  { meal: '江西：清蒸鱼/白灼虾 + 2 素 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '少油少盐，菜过水' },
+  { meal: '江西：豆腐 + 青菜 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '别点辣椒炒肉/腊味' },
+  { meal: '凉拌：凉拌牛肉/鸡丝 + 凉拌黄瓜/木耳 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '黄灯', tip: '酱汁另放，少红油花生' },
+  { meal: '木桶饭：半份饭 + 鸡腿去皮/瘦肉 + 2 素', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '黄灯', tip: '饭只吃一半，菜不淋汁' },
+  { meal: '东北：白菜炖豆腐 + 一份瘦肉 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '不喝汤，先吃菜和豆腐' },
+  { meal: '东北：炖鱼 + 凉拌菜 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '不喝汤，少点锅包肉/杀猪菜' },
+  { meal: '小餐馆：番茄炒蛋（少油）+ 清炒青菜 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '黄灯', tip: '番茄炒蛋容易油，让厨房少油' },
+  { meal: '小餐馆：清蒸/白灼鱼 + 2 素 + 半碗饭', scene: '餐馆', time: '外食', tags: ['restaurant'], level: '绿灯', tip: '7–8 分饱就停' }
+];
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function pickFrom(list, count, exclude = []) {
+  const pool = list.filter(v => !exclude.includes(v));
+  const out = [];
+  while (out.length < count && pool.length) {
+    const i = Math.floor(Math.random() * pool.length);
+    out.push(pool.splice(i, 1)[0]);
+  }
+  return out;
+}
+
+function sideDish(veg) {
+  if (veg === '黄瓜' || veg === '生菜') return `凉拌${veg}`;
+  return `清炒${veg}`;
+}
+
+function carbFor(...vegs) {
+  return vegs.some(v => STARCHY.includes(v)) ? '半碗饭（主食减半）' : pick(CARBS);
+}
+
+function makeHomeRoll() {
+  const protein = pick(HOME_PROTEINS);
+
+  if (protein.kind === 'dumpling') {
+    const [veg1, veg2] = pickFrom(DUMPLING_VEGGIES, 2);
+    return {
+      meal: `${protein.name} + ${veg1} + ${veg2}（一锅煮）`,
+      scene: '自煮',
+      time: '15 分钟',
+      tags: ['home', 'quick'],
+      tip: '不喝汤，蘸醋蒜；蔬菜多放'
+    };
+  }
+
+  if (protein.kind === 'egg') {
+    if (Math.random() < 0.35) {
+      const soupVeg = pick(SOUP_VEGGIES);
+      const sideVeg = pick(SIDE_VEGGIES.filter(v => v !== soupVeg));
+      const carb = carbFor(soupVeg, sideVeg);
+      return {
+        meal: `${soupVeg}蛋汤 + ${sideDish(sideVeg)} + ${carb}`,
+        scene: '自煮',
+        time: '15 分钟',
+        tags: ['home', 'quick'],
+        tip: '汤里少放盐，先吃菜和蛋'
+      };
+    }
+    const mainVeg = pick(STIR_VEGGIES);
+    const sideVeg = pick(SIDE_VEGGIES.filter(v => v !== mainVeg));
+    const carb = carbFor(mainVeg, sideVeg);
+    return {
+      meal: `${mainVeg}炒蛋 + ${sideDish(sideVeg)} + ${carb}`,
+      scene: '自煮',
+      time: '15 分钟',
+      tags: ['home', 'quick'],
+      tip: carb.includes('减半') ? '南瓜/土豆算主食，米饭减半' : '蛋白 + 蔬菜 + 主食，刚好一盘'
+    };
+  }
+
+  if (Math.random() < 0.4) {
+    const soupVeg = pick(SOUP_VEGGIES);
+    const sideVeg = pick(SIDE_VEGGIES.filter(v => v !== soupVeg));
+    const carb = carbFor(soupVeg, sideVeg);
+    return {
+      meal: `${soupVeg}豆腐汤 + ${sideDish(sideVeg)} + ${carb}`,
+      scene: '自煮',
+      time: '15 分钟',
+      tags: ['home', 'quick'],
+      tip: '豆腐先放，汤只吃料'
+    };
+  }
+
+  const mainVeg = pick(STIR_VEGGIES.filter(v => !['黄瓜', '生菜'].includes(v)));
+  const sideVeg = pick(SIDE_VEGGIES.filter(v => v !== mainVeg));
+  const carb = carbFor(mainVeg, sideVeg);
+  return {
+    meal: `${mainVeg}烧${protein.name} + ${sideDish(sideVeg)} + ${carb}`,
+    scene: '自煮',
+    time: '15 分钟',
+    tags: ['home', 'quick'],
+    tip: carb.includes('减半') ? '南瓜/土豆算主食，米饭减半' : '豆腐顶饱，米饭半碗就够'
+  };
+}
+
+function buildRollPool() {
+  const pool = [];
+  const seen = new Set();
+  const add = item => {
+    if (!seen.has(item.meal)) {
+      seen.add(item.meal);
+      pool.push(item);
+    }
+  };
+  if (rollFilterValue !== 'restaurant') {
+    for (let i = 0; i < 50; i += 1) add(makeHomeRoll());
+  }
+  if (rollFilterValue === 'all' || rollFilterValue === 'restaurant') {
+    RESTAURANT_ROLLS.forEach(add);
+  }
+  if (rollFilterValue === 'home') return pool.filter(item => item.tags.includes('home'));
+  if (rollFilterValue === 'quick') return pool.filter(item => item.tags.includes('quick'));
+  return pool;
+}
+
+const SLOT_SETS = {
+  western: [
+    { protein: '鸡胸', veg: '西兰花', carb: '藜麦', dish: '香煎鸡胸藜麦碗', tip: '鸡胸黑胡椒煎，西兰花焯水', weight: 4 },
+    { protein: '鸡胸', veg: '蘑菇', carb: '意面', dish: '蘑菇鸡胸意面', tip: '蘑菇先炒，意面煮到八分', weight: 3 },
+    { protein: '鸡胸', veg: '番茄', carb: '意面', dish: '番茄鸡胸意面', tip: '番茄炒出汁，少放酱', weight: 3 },
+    { protein: '鸡胸', veg: '黄瓜', carb: '全麦面包', dish: '鸡胸黄瓜三明治', tip: '面包烤一下，酱少放', weight: 3 },
+    { protein: '鸡胸', veg: '紫甘蓝', carb: '玉米', dish: '鸡胸玉米紫甘蓝沙拉', tip: '鸡胸撕丝，玉米半根', weight: 2 },
+    { protein: '虾仁', veg: '番茄', carb: '意面', dish: '番茄虾仁意面', tip: '虾仁最后放，别煮老', weight: 3 },
+    { protein: '虾仁', veg: '黄瓜', carb: '藜麦', dish: '虾仁黄瓜藜麦沙拉', tip: '黄瓜最后拌，酱汁一半', weight: 2 },
+    { protein: '虾仁', veg: '西兰花', carb: '土豆泥', dish: '虾仁西兰花土豆泥', tip: '土豆泥少黄油', weight: 2 },
+    { protein: '虾仁', veg: '蘑菇', carb: '意面', dish: '蘑菇虾仁意面', tip: '蘑菇先炒，虾仁后放', weight: 2 },
+    { protein: '金枪鱼', veg: '黄瓜', carb: '全麦面包', dish: '金枪鱼黄瓜三明治', tip: '水浸金枪鱼，沥干', weight: 4 },
+    { protein: '金枪鱼', veg: '番茄', carb: '全麦面包', dish: '金枪鱼番茄开放三明治', tip: '番茄切片，少蛋黄酱', weight: 2 },
+    { protein: '金枪鱼', veg: '黄瓜', carb: '藜麦', dish: '金枪鱼黄瓜藜麦沙拉', tip: '酱汁另放', weight: 2 },
+    { protein: '金枪鱼', veg: '紫甘蓝', carb: '玉米', dish: '金枪鱼玉米紫甘蓝沙拉', tip: '玉米当主食，酱汁少', weight: 3 },
+    { protein: '鸡蛋', veg: '番茄', carb: '全麦面包', dish: '番茄鸡蛋三明治', tip: '少油炒蛋', weight: 3 },
+    { protein: '鸡蛋', veg: '蘑菇', carb: '土豆泥', dish: '蘑菇炒蛋 + 土豆泥', tip: '土豆泥少黄油，蛋少油', weight: 2 },
+    { protein: '鸡蛋', veg: '彩椒', carb: '全麦面包', dish: '彩椒鸡蛋三明治', tip: '彩椒切丝，煎蛋少油', weight: 2 },
+    { protein: '鸡蛋', veg: '黄瓜', carb: '全麦面包', dish: '黄瓜鸡蛋三明治', tip: '黄瓜切片，酱少', weight: 2 },
+    { protein: '鸡蛋', veg: '紫甘蓝', carb: '全麦面包', dish: '鸡蛋紫甘蓝三明治', tip: '紫甘蓝切丝，酱少放', weight: 2 },
+    { protein: '牛肉', veg: '西兰花', carb: '土豆泥', dish: '黑椒牛肉土豆泥', tip: '牛肉用瘦部位，少油', weight: 3 },
+    { protein: '牛肉', veg: '胡萝卜', carb: '藜麦', dish: '牛肉胡萝卜藜麦碗', tip: '牛肉切薄片，快炒', weight: 2 },
+    { protein: '牛肉', veg: '彩椒', carb: '全麦面包', dish: '牛肉彩椒三明治', tip: '牛肉少油煎，面包一片', weight: 2 },
+    { protein: '牛肉', veg: '蘑菇', carb: '土豆泥', dish: '蘑菇牛肉土豆泥', tip: '牛肉末少油', weight: 2 },
+    { protein: '虾仁', veg: '黄瓜', carb: '全麦面包', dish: '虾仁黄瓜三明治', tip: '虾仁煮熟，酱少', weight: 2 },
+    { protein: '鸡胸', veg: '包菜', carb: '意面', dish: '鸡胸包菜意面', tip: '包菜切丝，和意面一起炒', weight: 2 },
+    { protein: '虾仁', veg: '包菜', carb: '玉米', dish: '虾仁包菜玉米碗', tip: '包菜炒软，玉米当主食', weight: 2 },
+    { protein: '鸡蛋', veg: '紫甘蓝', carb: '土豆泥', dish: '鸡蛋紫甘蓝土豆泥', tip: '紫甘蓝切丝，土豆泥少黄油', weight: 2 },
+    { protein: '鸡胸', veg: '彩椒', carb: '墨西哥饼', dish: '鸡胸彩椒卷', tip: '饼皮一张，酱少放', weight: 3 },
+    { protein: '牛肉', veg: '彩椒', carb: '墨西哥饼', dish: '牛肉彩椒卷', tip: '牛肉少油炒，饼皮一张', weight: 3 },
+    { protein: '虾仁', veg: '紫甘蓝', carb: '墨西哥饼', dish: '虾仁紫甘蓝卷', tip: '紫甘蓝切丝，酱少放', weight: 2 },
+    { protein: '三文鱼', veg: '西兰花', carb: '藜麦', dish: '香煎三文鱼藜麦碗', tip: '冷冻三文鱼提前解冻，少油煎', weight: 2 },
+    { protein: '三文鱼', veg: '黄瓜', carb: '全麦面包', dish: '三文鱼黄瓜三明治', tip: '三文鱼煎熟，面包一片', weight: 2 },
+    { protein: '鸡胸', veg: '西兰花', carb: '红薯', dish: '鸡胸西兰花红薯碗', tip: '红薯蒸熟，鸡胸切片', weight: 3 },
+    { protein: '鸡蛋', veg: '彩椒', carb: '墨西哥饼', dish: '鸡蛋彩椒卷', tip: '彩椒切丝，煎蛋少油', weight: 2 }
+  ],
+  home: [
+    { protein: '鸡蛋', veg: '番茄', carb: '半碗饭', dish: '番茄炒蛋 + 半碗饭', tip: '少油，先炒蛋再下番茄', weight: 5 },
+    { protein: '鸡蛋', veg: '丝瓜', carb: '半碗饭', dish: '丝瓜炒蛋 + 半碗饭', tip: '丝瓜先炒软，少油', weight: 3 },
+    { protein: '鸡蛋', veg: '大白菜', carb: '半碗饭', dish: '大白菜炒蛋 + 半碗饭', tip: '白菜炒软，少油', weight: 3 },
+    { protein: '鸡蛋', veg: '黄瓜', carb: '荞麦面', dish: '黄瓜鸡蛋荞麦面', tip: '面过水，酱汁减半', weight: 2 },
+    { protein: '鸡蛋', veg: '西葫芦', carb: '半碗饭', dish: '西葫芦炒蛋 + 半碗饭', tip: '西葫芦出水，少油', weight: 3 },
+    { protein: '鸡蛋', veg: '鲜香菇', carb: '半碗饭', dish: '香菇炒蛋 + 半碗饭', tip: '香菇先煸香', weight: 3 },
+    { protein: '嫩豆腐', veg: '丝瓜', carb: '半碗饭', dish: '丝瓜豆腐汤 + 半碗饭', tip: '汤只吃料', weight: 4 },
+    { protein: '嫩豆腐', veg: '冬瓜', carb: '半碗饭', dish: '冬瓜豆腐汤 + 半碗饭', tip: '冬瓜煮软，少盐', weight: 4 },
+    { protein: '嫩豆腐', veg: '番茄', carb: '半碗饭', dish: '番茄豆腐汤 + 半碗饭', tip: '番茄炒出汁再加水', weight: 4 },
+    { protein: '嫩豆腐', veg: '鲜香菇', carb: '荞麦面', dish: '香菇豆腐荞麦面', tip: '豆腐最后放，面半份', weight: 2 },
+    { protein: '老豆腐', veg: '鲜香菇', carb: '半碗饭', dish: '香菇烧豆腐 + 半碗饭', tip: '豆腐煎一下更香，少油', weight: 4 },
+    { protein: '老豆腐', veg: '大白菜', carb: '半碗饭', dish: '大白菜烧豆腐 + 半碗饭', tip: '白菜出水，不用勾芡', weight: 3 },
+    { protein: '老豆腐', veg: '西兰花', carb: '半碗饭', dish: '西兰花烧豆腐 + 半碗饭', tip: '西兰花焯水再炒', weight: 3 },
+    { protein: '老豆腐', veg: '白萝卜', carb: '半碗饭', dish: '白萝卜烧豆腐 + 半碗饭', tip: '萝卜煮软，少盐', weight: 2 },
+    { protein: '鸡胸', veg: '西兰花', carb: '荞麦面', dish: '鸡胸西兰花荞麦面', tip: '鸡胸切片，面过水', weight: 4 },
+    { protein: '鸡胸', veg: '鲜香菇', carb: '半碗饭', dish: '香菇鸡胸 + 半碗饭', tip: '鸡胸先用黑胡椒腌', weight: 3 },
+    { protein: '鸡胸', veg: '大白菜', carb: '荞麦面', dish: '鸡胸大白菜荞麦面', tip: '白菜煮软，汤少', weight: 3 },
+    { protein: '鸡胸', veg: '豆角', carb: '半碗饭', dish: '豆角鸡胸 + 半碗饭', tip: '豆角一定要煮熟', weight: 2 },
+    { protein: '鸡胸', veg: '黄瓜', carb: '红薯', dish: '鸡胸黄瓜 + 红薯', tip: '红薯蒸熟，鸡胸撕丝', weight: 2 },
+    { protein: '鸡胸', veg: '南瓜', carb: '半碗饭', dish: '南瓜鸡胸 + 半碗饭', tip: '南瓜算主食，米饭减半', weight: 2 },
+    { protein: '虾仁', veg: '西葫芦', carb: '荞麦面', dish: '虾仁西葫芦荞麦面', tip: '虾仁最后放', weight: 3 },
+    { protein: '虾仁', veg: '番茄', carb: '半碗饭', dish: '番茄虾仁 + 半碗饭', tip: '番茄炒汁，虾仁别老', weight: 3 },
+    { protein: '虾仁', veg: '冬瓜', carb: '半碗饭', dish: '冬瓜虾仁 + 半碗饭', tip: '冬瓜先煮软', weight: 3 },
+    { protein: '虾仁', veg: '西兰花', carb: '玉米', dish: '虾仁西兰花玉米', tip: '玉米当主食，虾仁快炒', weight: 2 },
+    { protein: '鸡蛋', veg: '丝瓜', carb: '速冻云吞', dish: '丝瓜鸡蛋云吞', tip: '云吞最后放，不喝汤', weight: 3 },
+    { protein: '嫩豆腐', veg: '番茄', carb: '速冻饺子', dish: '番茄豆腐饺子汤', tip: '饺子 8 个，汤只吃料', weight: 3 },
+    { protein: '虾仁', veg: '冬瓜', carb: '速冻云吞', dish: '冬瓜虾仁云吞', tip: '云吞最后放，少盐', weight: 2 },
+    { protein: '鸡蛋', veg: '番茄', carb: '速冻饺子', dish: '番茄鸡蛋饺子汤', tip: '饺子 8 个，番茄先炒出汁', weight: 2 },
+    { protein: '老豆腐', veg: '南瓜', carb: '半碗饭', dish: '南瓜烧豆腐 + 半碗饭', tip: '南瓜算主食，米饭减半', weight: 2 },
+    { protein: '鸡蛋', veg: '南瓜', carb: '半碗饭', dish: '南瓜蒸蛋 + 半碗饭', tip: '南瓜算主食，米饭减半', weight: 2 },
+    { protein: '虾仁', veg: '黄瓜', carb: '红薯', dish: '虾仁黄瓜 + 红薯', tip: '红薯蒸熟，虾仁快炒', weight: 2 },
+    { protein: '鸡蛋', veg: '彩椒', carb: '半碗饭', dish: '彩椒炒蛋 + 半碗饭', tip: '彩椒切丝，少油', weight: 3 },
+    { protein: '鸡蛋', veg: '洋葱', carb: '半碗饭', dish: '洋葱炒蛋 + 半碗饭', tip: '洋葱炒软，少油', weight: 2 },
+    { protein: '鸡蛋', veg: '芹菜', carb: '半碗饭', dish: '芹菜炒蛋 + 半碗饭', tip: '芹菜先焯水', weight: 2 },
+    { protein: '鸡蛋', veg: '包菜', carb: '荞麦面', dish: '包菜鸡蛋荞麦面', tip: '包菜切丝，面过水', weight: 2 },
+    { protein: '嫩豆腐', veg: '金针菇', carb: '半碗饭', dish: '金针菇豆腐汤 + 半碗饭', tip: '金针菇煮软，汤只吃料', weight: 3 },
+    { protein: '嫩豆腐', veg: '大白菜', carb: '半碗饭', dish: '白菜豆腐汤 + 半碗饭', tip: '白菜煮软，少盐', weight: 3 },
+    { protein: '老豆腐', veg: '包菜', carb: '半碗饭', dish: '包菜烧豆腐 + 半碗饭', tip: '包菜出水，不用勾芡', weight: 3 },
+    { protein: '老豆腐', veg: '花菜', carb: '半碗饭', dish: '花菜烧豆腐 + 半碗饭', tip: '花菜焯水再炒', weight: 2 },
+    { protein: '老豆腐', veg: '彩椒', carb: '半碗饭', dish: '彩椒烧豆腐 + 半碗饭', tip: '彩椒最后放', weight: 2 },
+    { protein: '老豆腐', veg: '杏鲍菇', carb: '半碗饭', dish: '杏鲍菇烧豆腐 + 半碗饭', tip: '杏鲍菇先煎香', weight: 3 },
+    { protein: '鸡胸', veg: '包菜', carb: '荞麦面', dish: '鸡胸包菜荞麦面', tip: '鸡胸切片，包菜切丝', weight: 3 },
+    { protein: '鸡胸', veg: '彩椒', carb: '荞麦面', dish: '彩椒鸡胸荞麦面', tip: '彩椒最后放，面过水', weight: 3 },
+    { protein: '鸡胸', veg: '芹菜', carb: '半碗饭', dish: '芹菜鸡胸 + 半碗饭', tip: '芹菜先焯水', weight: 2 },
+    { protein: '鸡胸', veg: '莲藕', carb: '半碗饭', dish: '莲藕鸡胸 + 半碗饭', tip: '莲藕算主食，米饭减半', weight: 2 },
+    { protein: '虾仁', veg: '金针菇', carb: '半碗饭', dish: '金针菇虾仁 + 半碗饭', tip: '金针菇煮软，虾仁最后放', weight: 2 },
+    { protein: '虾仁', veg: '包菜', carb: '荞麦面', dish: '虾仁包菜荞麦面', tip: '包菜切丝，面过水', weight: 2 },
+    { protein: '虾仁', veg: '彩椒', carb: '玉米', dish: '虾仁彩椒玉米', tip: '玉米当主食，虾仁快炒', weight: 2 },
+    { protein: '鸡蛋', veg: '杏鲍菇', carb: '半碗饭', dish: '杏鲍菇炒蛋 + 半碗饭', tip: '杏鲍菇先煎香', weight: 2 },
+    { protein: '鸡蛋', veg: '莲藕', carb: '半碗饭', dish: '莲藕炒蛋 + 半碗饭', tip: '莲藕算主食，米饭减半', weight: 2 },
+    { protein: '鸡胸', veg: '金针菇', carb: '荞麦面', dish: '金针菇鸡胸荞麦面', tip: '金针菇煮软，鸡胸切片', weight: 2 },
+    { protein: '鸡蛋', veg: '大白菜', carb: '速冻饺子', dish: '白菜鸡蛋饺子汤', tip: '饺子 8 个，白菜最后放', weight: 2 }
+  ]
+};
 
 const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 const pad = (n) => String(n).padStart(2, '0');
@@ -732,6 +1015,9 @@ const state = {
 let lastRoll = null;
 let rollFilterValue = 'all';
 let rollTimer = null;
+let slotMode = 'all';
+let slotBusy = false;
+let currentSlot = null;
 
 function saveStore() {
   try {
@@ -926,9 +1212,26 @@ function renderRotation() {
   }).join('');
 }
 
+const ROLL_HISTORY_KEY = 'lightplan.rollHistory.v1';
+
+function loadRollHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(ROLL_HISTORY_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function rememberRoll(meal) {
+  const history = loadRollHistory().filter(item => item !== meal);
+  history.unshift(meal);
+  try {
+    localStorage.setItem(ROLL_HISTORY_KEY, JSON.stringify(history.slice(0, 10)));
+  } catch (e) {}
+}
+
 function getRollPool() {
-  if (rollFilterValue === 'all') return ROLLS;
-  return ROLLS.filter(r => r.tags.includes(rollFilterValue));
+  return buildRollPool();
 }
 
 function renderRoll(result) {
@@ -938,7 +1241,7 @@ function renderRoll(result) {
     return;
   }
   $('rollResult').textContent = result.meal;
-  $('rollMeta').textContent = `${result.scene} · ${result.time} · ${result.tip}`;
+  $('rollMeta').textContent = `${result.scene} · ${result.time}${result.level ? ' · ' + result.level : ''} · ${result.tip}`;
 }
 
 function rollDinner() {
@@ -947,6 +1250,9 @@ function rollDinner() {
     toast('这个范围里没有选项');
     return;
   }
+  const history = loadRollHistory();
+  const fresh = pool.filter(item => !history.includes(item.meal));
+  const candidates = fresh.length ? fresh : pool;
   clearInterval(rollTimer);
   $('rollStage').classList.add('rolling');
   $('rollBtn').disabled = true;
@@ -954,14 +1260,15 @@ function rollDinner() {
   lastRoll = null;
   let count = 0;
   rollTimer = setInterval(() => {
-    const temp = pool[Math.floor(Math.random() * pool.length)];
+    const temp = candidates[Math.floor(Math.random() * candidates.length)];
     $('rollResult').textContent = temp.meal;
     $('rollMeta').textContent = `${temp.scene} · ${temp.time}`;
     count += 1;
     if (count >= 12) {
       clearInterval(rollTimer);
-      lastRoll = pool[Math.floor(Math.random() * pool.length)];
+      lastRoll = candidates[Math.floor(Math.random() * candidates.length)];
       renderRoll(lastRoll);
+      rememberRoll(lastRoll.meal);
       $('rollStage').classList.remove('rolling');
       $('rollBtn').disabled = false;
       $('rollAccept').disabled = false;
@@ -976,6 +1283,133 @@ function acceptRoll() {
   }
   $('dinner').value = lastRoll.meal;
   setScene(lastRoll.scene === '免煮' ? '自煮' : lastRoll.scene);
+  queueSave();
+  switchTab('today');
+  toast('已填入今晚晚餐');
+}
+
+const SLOT_HISTORY_KEY = 'lightplan.slotHistory.v1';
+
+function loadSlotHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(SLOT_HISTORY_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function rememberSlot(dish) {
+  const history = loadSlotHistory().filter(item => item !== dish);
+  history.unshift(dish);
+  try {
+    localStorage.setItem(SLOT_HISTORY_KEY, JSON.stringify(history.slice(0, 8)));
+  } catch (e) {}
+}
+
+function pickWeighted(items) {
+  const total = items.reduce((sum, item) => sum + (item.weight || 1), 0);
+  let r = Math.random() * total;
+  for (const item of items) {
+    r -= item.weight || 1;
+    if (r <= 0) return item;
+  }
+  return items[items.length - 1];
+}
+
+function getSlotPool() {
+  if (slotMode === 'western') return SLOT_SETS.western;
+  if (slotMode === 'home') return SLOT_SETS.home;
+  return [...SLOT_SETS.western, ...SLOT_SETS.home];
+}
+
+function pickSlotResult() {
+  const pool = getSlotPool();
+  const history = loadSlotHistory();
+  for (let i = 0; i < 40; i += 1) {
+    const candidate = pickWeighted(pool);
+    if (!history.includes(candidate.dish)) return candidate;
+  }
+  return pickWeighted(pool);
+}
+
+function setReel(index, text) {
+  const reel = $('reel' + index);
+  if (reel) reel.querySelector('span').textContent = text;
+}
+
+function resetSlotDisplay() {
+  const demo = slotMode === 'western'
+    ? { protein: '鸡胸', veg: '西兰花', carb: '藜麦' }
+    : { protein: '鸡蛋', veg: '番茄', carb: '半碗饭' };
+  setReel(0, demo.protein);
+  setReel(1, demo.veg);
+  setReel(2, demo.carb);
+  $('slotDish').textContent = '点“拉一下”开始';
+  $('slotTip').textContent = '三个转轮停下后，会给你一个完整搭配';
+  currentSlot = null;
+}
+
+function rollSlot() {
+  if (slotBusy) return;
+  const pool = getSlotPool();
+  if (!pool.length) return;
+
+  const picked = pickSlotResult();
+  const proteins = [...new Set(pool.map(item => item.protein))];
+  const vegs = [...new Set(pool.map(item => item.veg))];
+  const carbs = [...new Set(pool.map(item => item.carb))];
+  const reels = [$('reel0'), $('reel1'), $('reel2')];
+
+  slotBusy = true;
+  currentSlot = null;
+  $('slotRollBtn').disabled = true;
+  $('slotAcceptBtn').disabled = true;
+  $('slotDish').textContent = '转动中…';
+  $('slotTip').textContent = '正在搭配，马上停';
+  reels.forEach(reel => {
+    if (reel) reel.classList.add('spinning');
+  });
+
+  const intervals = [
+    setInterval(() => setReel(0, proteins[Math.floor(Math.random() * proteins.length)]), 60),
+    setInterval(() => setReel(1, vegs[Math.floor(Math.random() * vegs.length)]), 60),
+    setInterval(() => setReel(2, carbs[Math.floor(Math.random() * carbs.length)]), 60)
+  ];
+
+  const stop = (index, delay) => {
+    setTimeout(() => {
+      clearInterval(intervals[index]);
+      setReel(index, [picked.protein, picked.veg, picked.carb][index]);
+      const reel = reels[index];
+      if (reel) {
+        reel.classList.remove('spinning');
+        reel.classList.add('settle');
+        setTimeout(() => reel.classList.remove('settle'), 300);
+      }
+    }, delay);
+  };
+  stop(0, 700);
+  stop(1, 1050);
+  stop(2, 1400);
+
+  setTimeout(() => {
+    currentSlot = picked;
+    $('slotDish').textContent = picked.dish;
+    $('slotTip').textContent = picked.tip;
+    rememberSlot(picked.dish);
+    $('slotRollBtn').disabled = false;
+    $('slotAcceptBtn').disabled = false;
+    slotBusy = false;
+  }, 1650);
+}
+
+function acceptSlot() {
+  if (!currentSlot) {
+    toast('先拉一下');
+    return;
+  }
+  $('dinner').value = currentSlot.dish;
+  setScene('自煮');
   queueSave();
   switchTab('today');
   toast('已填入今晚晚餐');
@@ -1334,14 +1768,14 @@ function bindEvents() {
     renderDecision();
   }));
 
-  $$('#rollFilter button').forEach(btn => btn.addEventListener('click', () => {
-    rollFilterValue = btn.dataset.value;
-    $$('#rollFilter button').forEach(b => b.classList.toggle('active', b === btn));
-    lastRoll = null;
-    renderRoll(null);
+  $$('#slotMode button').forEach(btn => btn.addEventListener('click', () => {
+    if (slotBusy) return;
+    slotMode = btn.dataset.value;
+    $$('#slotMode button').forEach(b => b.classList.toggle('active', b === btn));
+    resetSlotDisplay();
   }));
-  $('rollBtn').addEventListener('click', rollDinner);
-  $('rollAccept').addEventListener('click', acceptRoll);
+  $('slotRollBtn').addEventListener('click', rollSlot);
+  $('slotAcceptBtn').addEventListener('click', acceptSlot);
 
   $$('.bottom-nav button').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
@@ -1379,6 +1813,7 @@ function init() {
   renderHistory();
   renderReview();
   renderStreak();
+  resetSlotDisplay();
   bindEvents();
 }
 
