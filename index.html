@@ -426,6 +426,38 @@
       </div>
 
       <div class="card">
+        <div class="card-head"><h3>午休与经期</h3><span class="tag">可选</span></div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="nap">午休</label>
+            <div class="input-wrap"><input id="nap" type="number" inputmode="decimal" step="0.5" placeholder="0.5"><span>h</span></div>
+          </div>
+          <div class="field">
+            <label for="period">经期</label>
+            <select id="period">
+              <option>无</option>
+              <option>第1天</option>
+              <option>第2天</option>
+              <option>第3天</option>
+              <option>第4天</option>
+              <option>第5天</option>
+              <option>第6天</option>
+              <option>第7天+</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-top:10px">
+          <label for="flow">经量</label>
+          <select id="flow">
+            <option>无</option>
+            <option>少</option>
+            <option>中</option>
+            <option>多</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
         <div class="card-head"><h3>早餐</h3><span class="tag">1–2 蛋 + 粗粮 + 菜</span></div>
         <textarea id="breakfast" placeholder="例：2 个鸡蛋 + 半根玉米 + 南瓜 + 上海青 + 豆浆"></textarea>
         <div class="chips" data-target="breakfast">
@@ -698,30 +730,30 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const STORE_KEY = 'lightplan.v1';
 
 const MENU = {
-  '2026-10-26': {
+  '2026-11-02': {
     breakfast: '鸡蛋 1–2 个 + 蒸玉米半根 + 蒸贝贝南瓜 1 小块 + 上海青 + 豆浆',
-    lunch: '豉汁蒸黄骨鱼 + 西红柿炒花菜木耳 + 炒小白菜 + 米饭半碗',
-    avoid: '炒细米粉、香芋地瓜丸、鲜肉包、馒头、冬瓜焖鸭、凉皮'
+    lunch: '清蒸鱼 + 香菇西兰花 + 炒生菜 + 米饭半碗',
+    avoid: '三丝炒米粉、油条、鲜肉包、双色花卷、板栗红烧肉、重庆小面；炒榨菜太咸'
   },
-  '2026-10-27': {
+  '2026-11-03': {
     breakfast: '鸡蛋 1–2 个 + 蒸玉米半根 + 蒸鲜花生一小把 + 白菜苗 + 豆浆',
-    lunch: '白贝蒸鸡蛋 + 土豆胡萝卜焖鸡（去皮，土豆当主食）+ 炒上海青苗 + 米饭小半碗',
-    avoid: '干炒牛河、叉烧包、葱油花卷、炒萝卜干、梅菜扣肉、潮汕肉卷、猪杂粉'
+    lunch: '沙姜鸡（去皮）+ 西红柿炒鸡蛋（少油）+ 炒上海青苗 + 米饭半碗',
+    avoid: '广式炒陈村粉、小葱油饼、糖包、馒头、萝卜炖牛杂、猪杂粉；炒萝卜干太咸'
   },
-  '2026-10-28': {
-    breakfast: '鸡蛋 1–2 个 + 蒸土豆仔 1 小个 + 菜心 + 豆浆',
-    lunch: '鲜菇莴笋炒肉丝 + 豆豉鲮鱼焖南瓜（少量）+ 手撕包菜 + 米饭半碗',
-    avoid: '芝麻肠粉、酱香饼、糖包、奶香馒头、炸花生米、红烧狮子头、水煮肉片、鱼丸粉'
+  '2026-11-04': {
+    breakfast: '鸡蛋 1–2 个 + 蒸土豆仔 1 小个 + 白菜苔 + 豆浆',
+    lunch: '土豆焖排骨（吃瘦的、少汁，土豆当半份主食）+ 红烧冬瓜 + 炒菜心苗 + 米饭半碗',
+    avoid: '芝麻肠粉、蛋糕、叉烧包、花卷、炸花生米、盐水鸭、海带黄豆筒骨汤、凉皮'
   },
-  '2026-10-29': {
-    breakfast: '鸡蛋 1–2 个 + 蒸板栗红薯 1 小个 + 白菜苔 + 豆浆',
-    lunch: '姜葱焗鱼头（吃鱼肉，不蘸汁）+ 腐竹炒青菜 + 炒奶白菜 + 米饭半碗',
-    avoid: '炒陈村粉、红糖发糕、花卷、炒酸菜、冬瓜烧肉丸、梅菜蒸肉饼、酸辣土豆丝、伊面'
+  '2026-11-05': {
+    breakfast: '鸡蛋 1–2 个 + 蒸板栗红薯 1 小个 + 菜心 + 豆浆',
+    lunch: '酱香鸡腿（去皮）+ 莴笋炒肉片 + 白灼秋葵 + 米饭半碗',
+    avoid: '干炒牛河、土豆丝鸡蛋饼、萝卜包、杂粮馒头、炒酸菜、铁锅炖大鹅、油泼面；木瓜花生排骨汤'
   },
-  '2026-10-30': {
-    breakfast: '鸡蛋 1–2 个 + 蒸鲜毛豆一小把 + 生菜 + 豆浆；玉米可加半根',
-    lunch: '照烧鸡肉（去皮、少酱）+ 鲫鱼豆腐汤（吃鱼和豆腐）+ 炒春菜苗 + 米饭半碗',
-    avoid: '三丝炒面、千层饼、韭菜肉包、红糖馒头、啤酒鸭、生炒猪头肉、云吞'
+  '2026-11-06': {
+    breakfast: '鸡蛋 1–2 个 + 蒸鲜毛豆一小把 + 小白菜 + 豆浆',
+    lunch: '红烧带鱼（吃鱼肉、少汁）+ 肉沫蒸水蛋 + 炒上海青 + 米饭半碗',
+    avoid: '时蔬炒细米粉、千层饼、青菜鲜肉包、红糖馒头、糖醋里脊、鹿茸菇炒五花肉、饺子；炒榨菜'
   }
 };
 
@@ -1027,7 +1059,8 @@ function saveStore() {
 
 function defaultRecord() {
   return {
-    weight: '', sleep: '', hunger: 3,
+    weight: '', sleep: '', nap: '', hunger: 3,
+    period: '无', flow: '无',
     breakfast: '', lunch: '', rice: '半碗', fullness: 3,
     snack: '', dinnerScene: '自煮', dinner: '',
     steps: '', exercise: '', bowel: '正常', note: ''
@@ -1042,7 +1075,10 @@ function collect() {
   return {
     weight: $('weight').value.trim(),
     sleep: $('sleep').value.trim(),
+    nap: $('nap').value.trim(),
     hunger: Number($('hunger').value),
+    period: $('period').value,
+    flow: $('flow').value,
     breakfast: $('breakfast').value.trim(),
     lunch: $('lunch').value.trim(),
     rice: $('rice').value,
@@ -1060,6 +1096,9 @@ function collect() {
 function fillForm(rec) {
   $('weight').value = rec.weight || '';
   $('sleep').value = rec.sleep || '';
+  $('nap').value = rec.nap || '';
+  $('period').value = rec.period || '无';
+  $('flow').value = rec.flow || '无';
   $('hunger').value = rec.hunger || 3;
   $('hungerOut').textContent = `${$('hunger').value} / 5`;
   $('breakfast').value = rec.breakfast || '';
@@ -1088,8 +1127,9 @@ function calcProgress(rec) {
 }
 
 function renderSummary(rec = getRecord(state.date)) {
+  const totalSleep = (parseFloat(rec.sleep) || 0) + (parseFloat(rec.nap) || 0);
   $('statWeight').textContent = rec.weight || '—';
-  $('statSleep').textContent = rec.sleep || '—';
+  $('statSleep').textContent = totalSleep ? (Math.round(totalSleep * 10) / 10) : '—';
   $('statSteps').textContent = rec.steps || '—';
   $('statFullness').textContent = `${rec.fullness || 3}/5`;
   const p = calcProgress(rec);
@@ -1157,8 +1197,10 @@ function queueSave() {
 
 function saveCurrent(showToast) {
   const rec = collect();
-  const hasAny = ['weight', 'sleep', 'breakfast', 'lunch', 'snack', 'dinner', 'steps', 'exercise', 'note']
-    .some(k => String(rec[k] || '').trim() !== '');
+  const hasAny = ['weight', 'sleep', 'nap', 'breakfast', 'lunch', 'snack', 'dinner', 'steps', 'exercise', 'note']
+    .some(k => String(rec[k] || '').trim() !== '')
+    || rec.period !== '无'
+    || rec.flow !== '无';
   if (hasAny) {
     state.records[state.date] = rec;
   } else {
@@ -1583,12 +1625,13 @@ function buildReport() {
   const menu = MENU[state.date];
   const lines = [
     `【减脂日报】${state.date} ${weekday(state.date)}`,
-    `晨重：${r.weight || '—'} kg｜睡眠：${r.sleep || '—'} h｜晨起饥饿：${r.hunger}/5`,
+    `晨重：${r.weight || '—'} kg｜睡眠：${r.sleep || '—'} h｜午休：${r.nap || '0'} h｜晨起饥饿：${r.hunger}/5`,
     `早餐：${r.breakfast || '—'}`,
     `午餐：${r.lunch || '—'}｜米饭：${r.rice || '—'}｜饱腹：${r.fullness}/5`,
     `加餐/饮料：${r.snack || '无'}`,
     `晚餐：${r.dinnerScene}｜${r.dinner || '—'}`,
     `步数：${r.steps || '—'}｜运动：${r.exercise || '—'}`,
+    `经期：${r.period || '无'}｜经量：${r.flow || '无'}`,
     `排便：${r.bowel || '—'}｜备注：${r.note || '无'}`
   ];
   if (menu) lines.push(`今日食堂：早=${menu.breakfast}；午=${menu.lunch}`);
@@ -1628,10 +1671,10 @@ function exportCSV() {
     toast('还没有记录');
     return;
   }
-  const headers = ['日期', '星期', '晨重(kg)', '睡眠(h)', '晨起饥饿(1-5)', '早餐', '午餐', '米饭量', '饱腹感(1-5)', '加餐/饮料', '晚餐场景', '晚餐', '步数', '运动', '排便', '备注'];
+  const headers = ['日期', '星期', '晨重(kg)', '睡眠(h)', '午休(h)', '经期', '经量', '晨起饥饿(1-5)', '早餐', '午餐', '米饭量', '饱腹感(1-5)', '加餐/饮料', '晚餐场景', '晚餐', '步数', '运动', '排便', '备注'];
   const rows = keys.map(k => {
     const r = getRecord(k);
-    return [k, weekday(k), r.weight, r.sleep, r.hunger, r.breakfast, r.lunch, r.rice, r.fullness, r.snack, r.dinnerScene, r.dinner, r.steps, r.exercise, r.bowel, r.note];
+    return [k, weekday(k), r.weight, r.sleep, r.nap, r.period, r.flow, r.hunger, r.breakfast, r.lunch, r.rice, r.fullness, r.snack, r.dinnerScene, r.dinner, r.steps, r.exercise, r.bowel, r.note];
   });
   const csv = '\ufeff' + [headers, ...rows]
     .map(row => row.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(','))
@@ -1675,11 +1718,11 @@ function buildCoachMarkdown() {
   if (!keys.length) {
     lines.push('暂无记录。');
   } else {
-    lines.push('| 日期 | 星期 | 晨重kg | 睡眠h | 晨起饥饿 | 早餐 | 午餐 | 米饭 | 饱腹 | 加餐 | 晚餐场景 | 晚餐 | 步数 | 运动 | 排便 | 备注 |');
-    lines.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+    lines.push('| 日期 | 星期 | 晨重kg | 睡眠h | 午休h | 经期 | 经量 | 晨起饥饿 | 早餐 | 午餐 | 米饭 | 饱腹 | 加餐 | 晚餐场景 | 晚餐 | 步数 | 运动 | 排便 | 备注 |');
+    lines.push('|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|');
     keys.forEach(k => {
       const r = getRecord(k);
-      lines.push(`| ${k} | ${weekday(k)} | ${escapeMd(r.weight)} | ${escapeMd(r.sleep)} | ${escapeMd(r.hunger)} | ${escapeMd(r.breakfast)} | ${escapeMd(r.lunch)} | ${escapeMd(r.rice)} | ${escapeMd(r.fullness)} | ${escapeMd(r.snack)} | ${escapeMd(r.dinnerScene)} | ${escapeMd(r.dinner)} | ${escapeMd(r.steps)} | ${escapeMd(r.exercise)} | ${escapeMd(r.bowel)} | ${escapeMd(r.note)} |`);
+      lines.push(`| ${k} | ${weekday(k)} | ${escapeMd(r.weight)} | ${escapeMd(r.sleep)} | ${escapeMd(r.nap)} | ${escapeMd(r.period)} | ${escapeMd(r.flow)} | ${escapeMd(r.hunger)} | ${escapeMd(r.breakfast)} | ${escapeMd(r.lunch)} | ${escapeMd(r.rice)} | ${escapeMd(r.fullness)} | ${escapeMd(r.snack)} | ${escapeMd(r.dinnerScene)} | ${escapeMd(r.dinner)} | ${escapeMd(r.steps)} | ${escapeMd(r.exercise)} | ${escapeMd(r.bowel)} | ${escapeMd(r.note)} |`);
     });
   }
   lines.push('', '## 每周复盘', '');
